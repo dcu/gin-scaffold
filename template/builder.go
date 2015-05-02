@@ -25,6 +25,10 @@ type Builder struct {
 }
 
 func NewBuilder(templatePath string) *Builder {
+	if templatePath[0:1] != "/" {
+		templatePath = TemplatePath(templatePath)
+	}
+
 	templateName := filepath.Base(templatePath)
 	builder := &Builder{
 		TemplateName: templateName,
@@ -55,6 +59,9 @@ func (builder *Builder) Write(outputPath string, data interface{}) {
 	defer file.Close()
 
 	writer := bufio.NewWriter(file)
-	tmpl.Execute(writer, data)
+	err = tmpl.Execute(writer, data)
+	if err != nil {
+		panic(err)
+	}
 	writer.Flush()
 }

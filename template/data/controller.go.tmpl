@@ -7,11 +7,11 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-type {{.ModelNamePlural}}Controller struct {
+type {{.ControllerName}}Controller struct {
 	Router *gin.Engine
 }
 
-func (controller *{{.ModelNamePlural}}Controller) create{{.ModelName}}(c *gin.Context) {
+func (controller *{{.ControllerName}}Controller) create{{.ModelName}}(c *gin.Context) {
 	c.Request.ParseForm()
 
 	{{.InstanceName}} := &models.{{.ModelName}}{}
@@ -24,8 +24,8 @@ func (controller *{{.ModelNamePlural}}Controller) create{{.ModelName}}(c *gin.Co
 	}
 }
 
-func (controller *{{.ModelNamePlural}}Controller) list{{.ModelNamePlural}}(c *gin.Context) {
-	{{.InstanceNamePlural}} := models.FindAll{{.ModelNamePlural}}(bson.M{})
+func (controller *{{.ControllerName}}Controller) list{{.ControllerName}}(c *gin.Context) {
+	{{.InstanceNamePlural}} := models.FindAll{{.ControllerName}}(bson.M{})
 	{{.InstanceNamePlural}}Response := make([]helpers.ResponseMap, len({{.InstanceNamePlural}}))
 	for i, {{.InstanceName}} := range {{.InstanceNamePlural}} {
 		{{.InstanceNamePlural}}Response[i] = {{.InstanceName}}.ToResponseMap()
@@ -34,7 +34,7 @@ func (controller *{{.ModelNamePlural}}Controller) list{{.ModelNamePlural}}(c *gi
 	helpers.JSONResponseArray(c, 200, {{.InstanceNamePlural}}Response)
 }
 
-func (controller *{{.ModelNamePlural}}Controller) get{{.ModelName}}(c *gin.Context) {
+func (controller *{{.ControllerName}}Controller) get{{.ModelName}}(c *gin.Context) {
 	{{.InstanceName}} := models.FindOne{{.ModelName}}ById(c.Params.ByName("id"))
 	if {{.InstanceName}} != nil {
 		helpers.JSONResponseObject(c, 200, {{.InstanceName}})
@@ -43,7 +43,7 @@ func (controller *{{.ModelNamePlural}}Controller) get{{.ModelName}}(c *gin.Conte
 	}
 }
 
-func (controller *{{.ModelNamePlural}}Controller) update{{.ModelName}}(c *gin.Context) {
+func (controller *{{.ControllerName}}Controller) update{{.ModelName}}(c *gin.Context) {
 	{{.InstanceName}}, err := find{{.ModelName}}ById(c)
 
 	if err != nil {
@@ -60,11 +60,11 @@ func (controller *{{.ModelNamePlural}}Controller) update{{.ModelName}}(c *gin.Co
 	}
 }
 
-func (controller *{{.ModelNamePlural}}Controller) Setup() {
-	controller.Router.POST("/{{.InstanceNamePlural}}", controller.create{{.ModelName}})
-	controller.Router.GET("/{{.InstanceNamePlural}}", controller.list{{.ModelNamePlural}})
-	controller.Router.GET("/{{.InstanceNamePlural}}/:id", controller.get{{.ModelName}})
-	controller.Router.PUT("/{{.InstanceNamePlural}}/:id", controller.update{{.ModelName}})
+func (controller *{{.ControllerName}}Controller) Setup() {
+	controller.Router.POST("/{{.RoutePath}}", controller.create{{.ModelName}})
+	controller.Router.GET("/{{.RoutePath}}", controller.list{{.ControllerName}})
+	controller.Router.GET("/{{.RoutePath}}/:id", controller.get{{.ModelName}})
+	controller.Router.PUT("/{{.RoutePath}}/:id", controller.update{{.ModelName}})
 }
 
 /*** Helpers ***/
