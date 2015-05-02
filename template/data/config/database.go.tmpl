@@ -9,7 +9,7 @@ import (
 
 var mongodbSession *mgo.Session
 var (
-	dbPrefix = "{{defaultDatabaseName}}"
+	dbPrefix = "{{.DatabaseNamePrefix}}"
 )
 
 func DBSession() *mgo.Session {

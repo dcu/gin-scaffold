@@ -8,6 +8,7 @@ import (
 
 var (
 	Commands = map[string]command.Base{
+		"init":     &command.InitCommand{},
 		"model":    &command.ModelCommand{},
 		"scaffold": &command.ScaffoldCommand{},
 	}

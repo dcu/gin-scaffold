@@ -3,6 +3,7 @@ package template
 import (
 	"bitbucket.org/pkg/inflect"
 	"bufio"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -34,15 +35,19 @@ func NewBuilder(templatePath string) *Builder {
 }
 
 func (builder *Builder) Template() *template.Template {
-	contents := LoadTemplate(builder.TemplatePath)
+	contents := LoadTemplateFromFile(builder.TemplatePath)
 	tmpl := template.Must(template.New(builder.TemplateName).Funcs(funcMap).Parse(contents))
 
 	return tmpl
 }
 
 func (builder *Builder) Write(outputPath string, data interface{}) {
-	tmpl := builder.Template()
+	if _, err := os.Stat(outputPath); err == nil {
+		fmt.Printf("File `%s` already exists. Skipping.\n", outputPath)
+		return
+	}
 
+	tmpl := builder.Template()
 	file, err := os.Create(outputPath)
 	if err != nil {
 		panic(err)
