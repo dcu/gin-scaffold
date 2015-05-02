@@ -7,7 +7,11 @@ import (
 )
 
 func LoadTemplate(name string) string {
-	data, err := ioutil.ReadFile(TemplatePath(name))
+	return LoadTemplateFromFile(TemplatePath(name))
+}
+
+func LoadTemplateFromFile(filePath string) string {
+	data, err := ioutil.ReadFile(filePath)
 
 	if err != nil {
 		panic(err)

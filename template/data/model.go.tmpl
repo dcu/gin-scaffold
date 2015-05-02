@@ -14,7 +14,7 @@ const (
 
 type {{.ModelName}} struct {
 	Id bson.ObjectId  `bson:"_id,omitempty"`
-{{range $fieldName, $fieldType := .Data}}\
+{{range $fieldName, $fieldType := .Fields}}\
 	{{$fieldName}} {{$fieldType}} `bson:"{{$fieldName | Underscore}}"`
 {{end}}\
 	Errors helpers.Errors `bson:"-"`
@@ -70,7 +70,7 @@ func ({{.InstanceName}} *{{.ModelName}}) update() bool {
 func ({{.InstanceName}} *{{.ModelName}}) ToResponseMap() helpers.ResponseMap {
 	return helpers.ResponseMap{
 		"id": {{.InstanceName}}.Id,
-{{range $fieldName, $fieldType := .Data}}\
+{{range $fieldName, $fieldType := .Fields}}\
 		"{{$fieldName | Underscore}}": {{$instanceName}}.{{$fieldName}},
 {{end}}
 	}
@@ -95,7 +95,7 @@ func ({{.InstanceName}} *{{.ModelName}}) IsValid() bool {
 
 func ({{.InstanceName}} *{{.ModelName}}) SetAttributes(params url.Values) {
 
-{{range $fieldName, $fieldType := .Data}}\
+{{range $fieldName, $fieldType := .Fields}}\
 	if value, ok := params["{{$fieldName | Underscore}}"]; ok {
 		account.{{$fieldName}} = value[0]
 	}
