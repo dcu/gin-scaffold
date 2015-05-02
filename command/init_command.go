@@ -14,7 +14,6 @@ var (
 		"controllers",
 		"helpers",
 		"config",
-		"path/filepath",
 	}
 )
 

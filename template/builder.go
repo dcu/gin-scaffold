@@ -46,6 +46,7 @@ func (builder *Builder) Template() *template.Template {
 }
 
 func (builder *Builder) Write(outputPath string, data interface{}) {
+	fmt.Printf("Creating file: %s\n", outputPath)
 	if _, err := os.Stat(outputPath); err == nil {
 		fmt.Printf("File `%s` already exists. Skipping.\n", outputPath)
 		return
