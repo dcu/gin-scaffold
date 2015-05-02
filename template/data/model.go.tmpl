@@ -1,0 +1,137 @@
+{{$instanceName := .InstanceName}}\
+package models
+
+import (
+	"{{.PackageName}}/config"
+	"{{.PackageName}}/helpers"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+	"net/url"
+)
+
+const (
+)
+
+type {{.ModelName}} struct {
+	Id bson.ObjectId  `bson:"_id,omitempty"`
+{{range $fieldName, $fieldType := .Data}}\
+	{{$fieldName}} {{$fieldType}} `bson:"{{$fieldName | Underscore}}"`
+{{end}}\
+	Errors helpers.Errors `bson:"-"`
+}
+
+func {{.ModelNamePlural}}Collection() *mgo.Collection {
+	return config.DefaultDB().C("{{.InstanceNamePlural}}")
+}
+
+func New{{.ModelName}}() *{{.ModelName}} {
+	{{.InstanceName}} := &{{.ModelName}}{}
+
+	// Set default values here
+
+	return {{.InstanceName}}
+}
+
+func ({{.InstanceName}} *{{.ModelName}}) Save() bool {
+	isNewRecord := (len({{.InstanceName}}.Id) == 0)
+	if isNewRecord {
+		{{.InstanceName}}.Id = bson.NewObjectId()
+	}
+
+	if !{{.InstanceName}}.IsValid() {
+		return false
+	}
+
+	if isNewRecord {
+		return {{.InstanceName}}.insert()
+	}
+
+	return {{.InstanceName}}.update()
+}
+
+func ({{.InstanceName}} *{{.ModelName}}) insert() bool {
+	err := {{.ModelNamePlural}}Collection().Insert({{.InstanceName}})
+	if err == nil {
+		return true
+	}
+
+	return false
+}
+
+func ({{.InstanceName}} *{{.ModelName}}) update() bool {
+	err := {{.ModelNamePlural}}Collection().UpdateId({{.InstanceName}}.Id, {{.InstanceName}})
+	if err == nil {
+		return true
+	}
+
+	return false
+}
+
+func ({{.InstanceName}} *{{.ModelName}}) ToResponseMap() helpers.ResponseMap {
+	return helpers.ResponseMap{
+		"id": {{.InstanceName}}.Id,
+{{range $fieldName, $fieldType := .Data}}\
+		"{{$fieldName | Underscore}}": {{$instanceName}}.{{$fieldName}},
+{{end}}
+	}
+}
+
+func ({{.InstanceName}} *{{.ModelName}}) ErrorMessages() helpers.ResponseMap {
+	errorMessages := helpers.ResponseMap{}
+	for fieldName, message := range {{.InstanceName}}.Errors.Messages {
+		errorMessages[fieldName] = message
+	}
+
+	return errorMessages
+}
+
+func ({{.InstanceName}} *{{.ModelName}}) IsValid() bool {
+	{{.InstanceName}}.Errors.Clear()
+
+	// Run validations here.
+
+	return !{{.InstanceName}}.Errors.HasMessages()
+}
+
+func ({{.InstanceName}} *{{.ModelName}}) SetAttributes(params url.Values) {
+
+{{range $fieldName, $fieldType := .Data}}\
+	if value, ok := params["{{$fieldName | Underscore}}"]; ok {
+		account.{{$fieldName}} = value[0]
+	}
+{{end}}\
+
+}
+
+func FindOne{{.ModelName}}(query bson.M) *{{.ModelName}} {
+	{{.InstanceName}} := &{{.ModelName}}{}
+
+	criteria := {{.ModelNamePlural}}Collection().Find(query)
+	err := criteria.One({{.InstanceName}})
+	if err != nil {
+		return nil
+	}
+
+	return {{.InstanceName}}
+}
+
+func FindOne{{.ModelName}}ById(id string) *{{.ModelName}} {
+	{{.InstanceName}}Id := bson.ObjectIdHex(id)
+	{{.InstanceName}} := FindOne{{.ModelName}}(bson.M{"_id": {{.InstanceName}}Id})
+
+	return {{.InstanceName}}
+}
+
+func FindAll{{.ModelNamePlural}}(query bson.M) []*{{.ModelName}} {
+	{{.InstanceNamePlural}} := []*{{.ModelName}}{}
+
+	criteria := {{.ModelNamePlural}}Collection().Find(query)
+	err := criteria.All(&{{.InstanceNamePlural}})
+	if err != nil {
+
+	}
+
+	return {{.InstanceNamePlural}}
+}
+
+// vi:syntax=go

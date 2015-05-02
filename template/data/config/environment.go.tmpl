@@ -1,0 +1,17 @@
+package config
+
+import (
+	"os"
+)
+
+var (
+	Environment = os.Getenv("GIN_ENV")
+)
+
+func init() {
+	if Environment == "" {
+		Environment = "development"
+	}
+}
+
+// vi:syntax=go

@@ -1,0 +1,84 @@
+package controllers
+
+import (
+	"{{.PackageName}}/helpers"
+	"{{.PackageName}}/models"
+	"github.com/gin-gonic/gin"
+	"gopkg.in/mgo.v2/bson"
+)
+
+type {{.ModelNamePlural}}Controller struct {
+	Router *gin.Engine
+}
+
+func (controller *{{.ModelNamePlural}}Controller) create{{.ModelName}}(c *gin.Context) {
+	c.Request.ParseForm()
+
+	{{.InstanceName}} := &models.{{.ModelName}}{}
+	{{.InstanceName}}.SetAttributes(c.Request.Form)
+
+	if {{.InstanceName}}.Save() {
+		helpers.JSONResponseObject(c, 200, {{.InstanceName}})
+	} else {
+		helpers.JSONResponse(c, 400, {{.InstanceName}}.ErrorMessages())
+	}
+}
+
+func (controller *{{.ModelNamePlural}}Controller) list{{.ModelNamePlural}}(c *gin.Context) {
+	{{.InstanceNamePlural}} := models.FindAll{{.ModelNamePlural}}(bson.M{})
+	{{.InstanceNamePlural}}Response := make([]helpers.ResponseMap, len({{.InstanceNamePlural}}))
+	for i, {{.InstanceName}} := range {{.InstanceNamePlural}} {
+		{{.InstanceNamePlural}}Response[i] = {{.InstanceName}}.ToResponseMap()
+	}
+
+	helpers.JSONResponseArray(c, 200, {{.InstanceNamePlural}}Response)
+}
+
+func (controller *{{.ModelNamePlural}}Controller) get{{.ModelName}}(c *gin.Context) {
+	{{.InstanceName}} := models.FindOne{{.ModelName}}ById(c.Params.ByName("id"))
+	if {{.InstanceName}} != nil {
+		helpers.JSONResponseObject(c, 200, {{.InstanceName}})
+	} else {
+		helpers.JSONResponse(c, 404, helpers.ResponseMap{})
+	}
+}
+
+func (controller *{{.ModelNamePlural}}Controller) update{{.ModelName}}(c *gin.Context) {
+	{{.InstanceName}}, err := find{{.ModelName}}ById(c)
+
+	if err != nil {
+		helpers.JSONResponseError(c, err)
+		return
+	}
+
+	{{.InstanceName}}.SetAttributes(c.Request.Form)
+
+	if {{.InstanceName}}.Save() {
+		helpers.JSONResponseObject(c, 200, {{.InstanceName}})
+	} else {
+		helpers.JSONResponse(c, 400, {{.InstanceName}}.ErrorMessages())
+	}
+}
+
+func (controller *{{.ModelNamePlural}}Controller) Setup() {
+	controller.Router.POST("/{{.InstanceNamePlural}}", controller.create{{.ModelName}})
+	controller.Router.GET("/{{.InstanceNamePlural}}", controller.list{{.ModelNamePlural}})
+	controller.Router.GET("/{{.InstanceNamePlural}}/:id", controller.get{{.ModelName}})
+	controller.Router.PUT("/{{.InstanceNamePlural}}/:id", controller.update{{.ModelName}})
+}
+
+/*** Helpers ***/
+func find{{.ModelName}}ById(c *gin.Context) (*models.{{.ModelName}}, *helpers.ResponseError) {
+	c.Request.ParseForm()
+
+	{{.InstanceName}} := models.FindOne{{.ModelName}}ById(c.Params.ByName("id"))
+	if {{.InstanceName}} == nil {
+		err := helpers.NewResponseError(404, "{{.ModelName}} not found.")
+		return nil, err
+	}
+
+	return {{.InstanceName}}, nil
+}
+
+// vi:syntax=go
+
