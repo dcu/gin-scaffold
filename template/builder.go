@@ -2,7 +2,7 @@ package template
 
 import (
 	"bitbucket.org/pkg/inflect"
-	"fmt"
+	"bufio"
 	"io"
 	"os"
 	"path/filepath"
@@ -54,9 +54,9 @@ func (builder *Builder) Write(writer io.Writer, data interface{}) {
 }
 
 func (builder *Builder) WriteToPath(outputPath string, data interface{}) {
-	fmt.Printf("Creating file: %s\n", outputPath)
+	printAction("green+h:black", "create", outputPath)
 	if _, err := os.Stat(outputPath); err == nil {
-		fmt.Printf("File `%s` already exists. Skipping.\n", outputPath)
+		printAction("red+h:black", "skip", outputPath)
 		return
 	}
 
@@ -67,4 +67,38 @@ func (builder *Builder) WriteToPath(outputPath string, data interface{}) {
 	defer file.Close()
 
 	builder.Write(file, data)
+}
+
+func (builder *Builder) InsertAfterToPath(outputPath string, after string, data interface{}) {
+	printAction("cyan+h:black", "insert", outputPath)
+
+	newFilePath := outputPath + ".new"
+
+	file, err := os.Open(outputPath)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	outputFile, err := os.Create(newFilePath)
+	if err != nil {
+		panic(err)
+	}
+
+	scanner := bufio.NewScanner(file)
+	writer := bufio.NewWriter(outputFile)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		writer.WriteString(line + "\n")
+		if strings.HasPrefix(line, after) {
+			builder.Write(writer, data)
+		}
+	}
+
+	writer.Flush()
+	outputFile.Close()
+
+	os.Rename(newFilePath, outputPath)
 }
