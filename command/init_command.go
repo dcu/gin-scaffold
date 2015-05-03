@@ -20,6 +20,7 @@ var (
 type InitCommand struct {
 	ProjectDir         string
 	DatabaseNamePrefix string
+	PackageName        string
 }
 
 func (command *InitCommand) Execute(args []string) {
@@ -30,10 +31,14 @@ func (command *InitCommand) Execute(args []string) {
 
 	command.ProjectDir = projectDir
 	command.DatabaseNamePrefix = filepath.Base(projectDir)
+	command.PackageName = template.PackageName()
 	command.createLayout()
 
 	command.installFiles("helpers")
 	command.installFiles("config")
+	command.installFiles("controllers")
+
+	command.installFile("", "main.go.tmpl")
 }
 
 func (command *InitCommand) installFiles(dirName string) {
@@ -43,13 +48,17 @@ func (command *InitCommand) installFiles(dirName string) {
 	}
 
 	for _, templateFile := range helperFiles {
-		builder := template.NewBuilder(templateFile)
-
-		fileName := filepath.Base(templateFile)
-		fileName = strings.TrimRight(fileName, ".tmpl")
-
-		builder.Write(filepath.Join(command.ProjectDir, dirName, fileName), command)
+		command.installFile(dirName, templateFile)
 	}
+}
+
+func (command *InitCommand) installFile(dirName string, templateFile string) {
+	builder := template.NewBuilder(templateFile)
+
+	fileName := filepath.Base(templateFile)
+	fileName = strings.TrimRight(fileName, ".tmpl")
+
+	builder.Write(filepath.Join(command.ProjectDir, dirName, fileName), command)
 }
 
 func (command *InitCommand) directoryInRoot(path string) string {
