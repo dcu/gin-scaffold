@@ -1,8 +1,8 @@
 package command
 
 import (
-	//"fmt"
 	"bitbucket.org/pkg/inflect"
+	"fmt"
 	"github.com/dcu/gin-scaffold/template"
 	"path/filepath"
 	"strings"
@@ -16,6 +16,18 @@ type ModelCommand struct {
 	InstanceNamePlural string
 	TemplateName       string
 	Fields             map[string]string
+}
+
+func (command *ModelCommand) Help() {
+	fmt.Printf(`Usage:
+	gin-scaffold model <model name> <field name>:<field type> ...
+
+Description:
+	The gin-scaffold model command creates a new model with the given fields.
+
+Example:
+	gin-scaffold model Post Title:string Body:string 
+`)
 }
 
 // Converts "<fieldname>:<type>" to {"<fieldname>": "<type>"}

@@ -3,6 +3,7 @@ package command
 import (
 	//"fmt"
 	"bitbucket.org/pkg/inflect"
+	"fmt"
 	"github.com/dcu/gin-scaffold/template"
 	"path/filepath"
 )
@@ -16,6 +17,18 @@ type ControllerCommand struct {
 	RoutePath          string
 	TemplateName       string
 	Fields             map[string]string
+}
+
+func (command *ControllerCommand) Help() {
+	fmt.Printf(`Usage:
+	gin-scaffold controller <controller name>
+
+Description:
+	The gin-scaffold controller command creates a new controller.
+
+Example:
+	gin-scaffold controller Posts
+`)
 }
 
 func (command *ControllerCommand) Execute(args []string) {

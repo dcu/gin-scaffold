@@ -2,6 +2,7 @@ package command
 
 import (
 	//"fmt"
+	"fmt"
 	"github.com/dcu/gin-scaffold/template"
 	"os"
 	"path/filepath"
@@ -22,6 +23,18 @@ type InitCommand struct {
 	ProjectName        string
 	DatabaseNamePrefix string
 	PackageName        string
+}
+
+func (command *InitCommand) Help() {
+	fmt.Printf(`Usage:
+	gin-scaffold init <app path>
+
+Description:
+	The gin-scaffold init command creates a new gin application.
+
+Example:
+	gin-scaffold init blog
+`)
 }
 
 func (command *InitCommand) Execute(args []string) {

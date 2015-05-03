@@ -6,17 +6,12 @@ import (
 	"os"
 )
 
-var (
-	Commands = map[string]command.Base{
-		"init":       &command.InitCommand{},
-		"model":      &command.ModelCommand{},
-		"controller": &command.ControllerCommand{},
-		"scaffold":   &command.ScaffoldCommand{},
-	}
-)
-
 func printUsageAndExit() {
-	fmt.Printf("Usage: %s <command> <args>\n", os.Args[0])
+	fmt.Printf("Gin Scaffold\n")
+	for commandName, command := range command.Commands {
+		fmt.Printf("\nCommand `%s`:\n\n", commandName)
+		command.Help()
+	}
 	os.Exit(0)
 }
 
@@ -32,7 +27,7 @@ func main() {
 		commandArgs = os.Args[2:]
 	}
 
-	command := Commands[commandName]
+	command := command.FindCommand(commandName)
 	if command == nil {
 		printUsageAndExit()
 	}

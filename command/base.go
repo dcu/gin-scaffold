@@ -7,4 +7,5 @@ import (
 
 type Base interface {
 	Execute(args []string)
+	Help()
 }
