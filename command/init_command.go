@@ -19,6 +19,7 @@ var (
 
 type InitCommand struct {
 	ProjectDir         string
+	ProjectName        string
 	DatabaseNamePrefix string
 	PackageName        string
 }
@@ -29,16 +30,17 @@ func (command *InitCommand) Execute(args []string) {
 		panic(err)
 	}
 
+	command.ProjectName = filepath.Base(projectDir)
 	command.ProjectDir = projectDir
 	command.DatabaseNamePrefix = filepath.Base(projectDir)
-	command.PackageName = template.PackageName()
+	command.PackageName = filepath.Join(template.PackageName(), command.ProjectName)
 	command.createLayout()
 
 	command.installFiles("helpers")
 	command.installFiles("config")
 	command.installFiles("controllers")
 
-	command.installFile("", "main.go.tmpl")
+	command.installFile("", "main.go.tmpl", command.ProjectName+".go")
 }
 
 func (command *InitCommand) installFiles(dirName string) {
@@ -48,17 +50,15 @@ func (command *InitCommand) installFiles(dirName string) {
 	}
 
 	for _, templateFile := range helperFiles {
-		command.installFile(dirName, templateFile)
+		outputFileName := filepath.Base(templateFile)
+		outputFileName = strings.TrimRight(outputFileName, ".tmpl")
+		command.installFile(dirName, templateFile, outputFileName)
 	}
 }
 
-func (command *InitCommand) installFile(dirName string, templateFile string) {
+func (command *InitCommand) installFile(dirName string, templateFile string, outputFileName string) {
 	builder := template.NewBuilder(templateFile)
-
-	fileName := filepath.Base(templateFile)
-	fileName = strings.TrimRight(fileName, ".tmpl")
-
-	builder.Write(filepath.Join(command.ProjectDir, dirName, fileName), command)
+	builder.WriteToPath(filepath.Join(command.ProjectDir, dirName, outputFileName), command)
 }
 
 func (command *InitCommand) directoryInRoot(path string) string {

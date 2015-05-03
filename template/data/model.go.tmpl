@@ -97,7 +97,7 @@ func ({{.InstanceName}} *{{.ModelName}}) SetAttributes(params url.Values) {
 
 {{range $fieldName, $fieldType := .Fields}}\
 	if value, ok := params["{{$fieldName | Underscore}}"]; ok {
-		account.{{$fieldName}} = value[0]
+		{{$instanceName}}.{{$fieldName}} = value[0]
 	}
 {{end}}\
 

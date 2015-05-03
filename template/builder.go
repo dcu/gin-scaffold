@@ -2,8 +2,8 @@ package template
 
 import (
 	"bitbucket.org/pkg/inflect"
-	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -45,24 +45,26 @@ func (builder *Builder) Template() *template.Template {
 	return tmpl
 }
 
-func (builder *Builder) Write(outputPath string, data interface{}) {
+func (builder *Builder) Write(writer io.Writer, data interface{}) {
+	tmpl := builder.Template()
+	err := tmpl.Execute(writer, data)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (builder *Builder) WriteToPath(outputPath string, data interface{}) {
 	fmt.Printf("Creating file: %s\n", outputPath)
 	if _, err := os.Stat(outputPath); err == nil {
 		fmt.Printf("File `%s` already exists. Skipping.\n", outputPath)
 		return
 	}
 
-	tmpl := builder.Template()
 	file, err := os.Create(outputPath)
 	if err != nil {
 		panic(err)
 	}
 	defer file.Close()
 
-	writer := bufio.NewWriter(file)
-	err = tmpl.Execute(writer, data)
-	if err != nil {
-		panic(err)
-	}
-	writer.Flush()
+	builder.Write(file, data)
 }
