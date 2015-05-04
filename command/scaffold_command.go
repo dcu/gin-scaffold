@@ -1,6 +1,7 @@
 package command
 
 import (
+	"bitbucket.org/pkg/inflect"
 	"fmt"
 )
 
@@ -20,6 +21,7 @@ Example:
 }
 
 func (command *ScaffoldCommand) Execute(args []string) {
+	args[0] = inflect.Singularize(args[0])
 	modelCommand := &ModelCommand{}
 	modelCommand.Execute(args)
 
