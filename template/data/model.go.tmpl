@@ -13,7 +13,7 @@ const (
 )
 
 type {{.ModelName}} struct {
-	Id bson.ObjectId  `bson:"_id,omitempty"`
+	ID bson.ObjectId  `bson:"_id,omitempty"`
 {{range $fieldName, $fieldType := .Fields}}\
 	{{$fieldName}} {{$fieldType}} `bson:"{{$fieldName | Underscore}}"`
 {{end}}\
@@ -33,9 +33,9 @@ func New{{.ModelName}}() *{{.ModelName}} {
 }
 
 func ({{.InstanceName}} *{{.ModelName}}) Save() bool {
-	isNewRecord := (len({{.InstanceName}}.Id) == 0)
+	isNewRecord := (len({{.InstanceName}}.ID) == 0)
 	if isNewRecord {
-		{{.InstanceName}}.Id = bson.NewObjectId()
+		{{.InstanceName}}.ID = bson.NewObjectId()
 	}
 
 	if !{{.InstanceName}}.IsValid() {
@@ -59,7 +59,7 @@ func ({{.InstanceName}} *{{.ModelName}}) insert() bool {
 }
 
 func ({{.InstanceName}} *{{.ModelName}}) update() bool {
-	err := {{.ModelNamePlural}}Collection().UpdateId({{.InstanceName}}.Id, {{.InstanceName}})
+	err := {{.ModelNamePlural}}Collection().UpdateId({{.InstanceName}}.ID, {{.InstanceName}})
 	if err == nil {
 		return true
 	}
@@ -69,7 +69,7 @@ func ({{.InstanceName}} *{{.ModelName}}) update() bool {
 
 func ({{.InstanceName}} *{{.ModelName}}) ToResponseMap() helpers.ResponseMap {
 	return helpers.ResponseMap{
-		"id": {{.InstanceName}}.Id,
+		"id": {{.InstanceName}}.ID,
 {{range $fieldName, $fieldType := .Fields}}\
 		"{{$fieldName | Underscore}}": {{$instanceName}}.{{$fieldName}},
 {{end}}
@@ -115,9 +115,9 @@ func FindOne{{.ModelName}}(query bson.M) *{{.ModelName}} {
 	return {{.InstanceName}}
 }
 
-func FindOne{{.ModelName}}ById(id string) *{{.ModelName}} {
-	{{.InstanceName}}Id := bson.ObjectIdHex(id)
-	{{.InstanceName}} := FindOne{{.ModelName}}(bson.M{"_id": {{.InstanceName}}Id})
+func FindOne{{.ModelName}}ByID(id string) *{{.ModelName}} {
+	{{.InstanceName}}ID := bson.ObjectIdHex(id)
+	{{.InstanceName}} := FindOne{{.ModelName}}(bson.M{"_id": {{.InstanceName}}ID})
 
 	return {{.InstanceName}}
 }

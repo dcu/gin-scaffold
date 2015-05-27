@@ -52,4 +52,12 @@ func DefaultDB() *mgo.Database {
 	return DB(dbPrefix + "-development")
 }
 
+// AddBasicIndex add a ascending index given a list of `keys`. The index is always built in background.
+func AddBasicIndex(collection *mgo.Collection, keys ...string) {
+	collection.EnsureIndex(mgo.Index{
+		Key:        keys,
+		Background: true,
+	})
+}
+
 // vi:syntax=go
