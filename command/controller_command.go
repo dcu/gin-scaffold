@@ -41,8 +41,11 @@ func (command *ControllerCommand) Execute(args []string) {
 	command.PackageName = template.PackageName()
 
 	outputPath := filepath.Join("controllers", inflect.Underscore(command.ControllerName)+".go")
-
 	builder := template.NewBuilder("controller.go.tmpl")
+	builder.WriteToPath(outputPath, command)
+
+	outputPath = filepath.Join("controllers", inflect.Underscore(command.ControllerName)+"_helpers.go")
+	builder = template.NewBuilder("controller_helpers.go.tmpl")
 	builder.WriteToPath(outputPath, command)
 
 	command.insertIntoRoutes()

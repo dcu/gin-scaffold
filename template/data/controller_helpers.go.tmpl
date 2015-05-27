@@ -1,0 +1,22 @@
+package controllers
+
+import (
+	"{{.PackageName}}/helpers"
+	"{{.PackageName}}/models"
+	"github.com/gin-gonic/gin"
+)
+
+func find{{.ModelName}}ByID(c *gin.Context) (*models.{{.ModelName}}, *helpers.ResponseError) {
+	c.Request.ParseForm()
+
+	{{.InstanceName}} := models.FindOne{{.ModelName}}ByID(c.Params.ByName("id"))
+	if {{.InstanceName}} == nil {
+		err := helpers.NewResponseError(404, "{{.ModelName}} not found.")
+		return nil, err
+	}
+
+	return {{.InstanceName}}, nil
+}
+
+// vi:syntax=go
+

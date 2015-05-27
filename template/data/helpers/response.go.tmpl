@@ -15,8 +15,8 @@ type Responsible interface {
 	ToResponseMap() ResponseMap
 }
 
-func NewResponseError(code int, message string) *ResponseError {
-	err := &ResponseError{Code: code, Message: message}
+func NewResponseError(httpCode int, message string) *ResponseError {
+	err := &ResponseError{Code: httpCode, Message: message}
 
 	return err
 }
