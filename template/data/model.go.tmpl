@@ -20,10 +20,6 @@ type {{.ModelName}} struct {
 	Errors helpers.Errors `bson:"-"`
 }
 
-func {{.ModelNamePlural}}Collection() *mgo.Collection {
-	return config.DefaultDB().C("{{.InstanceNamePlural}}")
-}
-
 func New{{.ModelName}}() *{{.ModelName}} {
 	{{.InstanceName}} := &{{.ModelName}}{}
 
@@ -50,7 +46,10 @@ func ({{.InstanceName}} *{{.ModelName}}) Save() bool {
 }
 
 func ({{.InstanceName}} *{{.ModelName}}) insert() bool {
-	err := {{.ModelNamePlural}}Collection().Insert({{.InstanceName}})
+	session := New{{.ModelName}}Session()
+	defer session.Close()
+
+	err := session.Insert({{.InstanceName}})
 	if err == nil {
 		return true
 	}
@@ -59,7 +58,10 @@ func ({{.InstanceName}} *{{.ModelName}}) insert() bool {
 }
 
 func ({{.InstanceName}} *{{.ModelName}}) update() bool {
-	err := {{.ModelNamePlural}}Collection().UpdateId({{.InstanceName}}.ID, {{.InstanceName}})
+	session := New{{.ModelName}}Session()
+	defer session.Close()
+
+	err := session.Update({{.InstanceName}})
 	if err == nil {
 		return true
 	}
@@ -103,18 +105,23 @@ func ({{.InstanceName}} *{{.ModelName}}) SetAttributes(params url.Values) {
 
 }
 
+// FindOne{{.ModelName}} finds a {{.InstanceName}} in the database using the given `query`
 func FindOne{{.ModelName}}(query bson.M) *{{.ModelName}} {
 	{{.InstanceName}} := &{{.ModelName}}{}
 
-	criteria := {{.ModelNamePlural}}Collection().Find(query)
+	session := New{{.ModelName}}Session()
+	defer session.Close()
+
+	criteria := session.Query(query)
 	err := criteria.One({{.InstanceName}})
 	if err != nil {
-		return nil
+		panic(err)
 	}
 
 	return {{.InstanceName}}
 }
 
+// FindOne{{.ModelName}}ByID finds a {{.ModelName}} in the database using the given `id`
 func FindOne{{.ModelName}}ByID(id string) *{{.ModelName}} {
 	{{.InstanceName}}ID := bson.ObjectIdHex(id)
 	{{.InstanceName}} := FindOne{{.ModelName}}(bson.M{"_id": {{.InstanceName}}ID})
@@ -122,13 +129,13 @@ func FindOne{{.ModelName}}ByID(id string) *{{.ModelName}} {
 	return {{.InstanceName}}
 }
 
-func FindAll{{.ModelNamePlural}}(query bson.M) []*{{.ModelName}} {
+// Load{{.ModelNamePlural}} takes a query a tries to convert it into a {{.ModelName}} array.
+func Load{{.ModelNamePlural}}(query *mgo.Query) []*{{.ModelName}} {
 	{{.InstanceNamePlural}} := []*{{.ModelName}}{}
 
-	criteria := {{.ModelNamePlural}}Collection().Find(query)
-	err := criteria.All(&{{.InstanceNamePlural}})
+	err := query.All(&{{.InstanceNamePlural}})
 	if err != nil {
-
+		helpers.HandleDBError(err)
 	}
 
 	return {{.InstanceNamePlural}}

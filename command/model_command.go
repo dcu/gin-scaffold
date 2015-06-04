@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// ModelCommand generates files related to model.
 type ModelCommand struct {
 	PackageName        string
 	ModelName          string
@@ -18,6 +19,7 @@ type ModelCommand struct {
 	Fields             map[string]string
 }
 
+// Help prints a help message for this command.
 func (command *ModelCommand) Help() {
 	fmt.Printf(`Usage:
 	gin-scaffold model <model name> <field name>:<field type> ...
@@ -41,6 +43,7 @@ func processFields(args []string) map[string]string {
 	return fields
 }
 
+// Execute runs this command.
 func (command *ModelCommand) Execute(args []string) {
 	command.ModelName = args[0]
 	command.ModelNamePlural = inflect.Pluralize(command.ModelName)
@@ -52,6 +55,10 @@ func (command *ModelCommand) Execute(args []string) {
 
 	outputPath := filepath.Join("models", inflect.Underscore(command.ModelName)+".go")
 
-	builder := template.NewBuilder("model.go.tmpl") //, modelName, fields)
+	builder := template.NewBuilder("model.go.tmpl")
+	builder.WriteToPath(outputPath, command)
+
+	outputPath = filepath.Join("models", inflect.Underscore(command.ModelName)+"_session.go")
+	builder = template.NewBuilder("model_session.go.tmpl")
 	builder.WriteToPath(outputPath, command)
 }

@@ -24,11 +24,17 @@ func (controller *{{.ControllerName}}Controller) create{{.ModelName}}(c *gin.Con
 	}
 }
 
-func (controller *{{.ControllerName}}Controller) list{{.ControllerName}}(c *gin.Context) {
-	{{.InstanceNamePlural}} := models.FindAll{{.ControllerName}}(bson.M{})
+func (controller *{{.ModelNamePlural}}Controller) list{{.ModelNamePlural}}(c *gin.Context) {
+	session := models.New{{.ModelName}}Session()
+	defer session.Close()
+
+	query := session.Query(bson.M{})
+	query.Sort("-timestamp").Limit(20)
+
+	{{.InstanceNamePlural}} := models.Load{{.ModelNamePlural}}(query)
 	{{.InstanceNamePlural}}Response := make([]helpers.ResponseMap, len({{.InstanceNamePlural}}))
-	for i, {{.InstanceName}} := range {{.InstanceNamePlural}} {
-		{{.InstanceNamePlural}}Response[i] = {{.InstanceName}}.ToResponseMap()
+	for i, {{.InstanceNamePlural}} := range {{.InstanceNamePlural}} {
+		{{.InstanceNamePlural}}Response[i] = {{.InstanceNamePlural}}.ToResponseMap()
 	}
 
 	helpers.JSONResponseArray(c, 200, {{.InstanceNamePlural}}Response)
