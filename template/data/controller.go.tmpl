@@ -24,7 +24,7 @@ func (controller *{{.ControllerName}}Controller) create{{.ModelName}}(c *gin.Con
 	}
 }
 
-func (controller *{{.ModelNamePlural}}Controller) list{{.ModelNamePlural}}(c *gin.Context) {
+func (controller *{{.ControllerName}}Controller) list{{.ModelNamePlural}}(c *gin.Context) {
 	session := models.New{{.ModelName}}Session()
 	defer session.Close()
 

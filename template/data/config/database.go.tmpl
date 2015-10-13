@@ -42,7 +42,6 @@ func DefaultDB() *mgo.Database {
 		{
 			return DB(dbPrefix + "-test")
 		}
-
 	case "production":
 		{
 			return DB(dbPrefix + "-production")

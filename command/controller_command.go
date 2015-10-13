@@ -12,6 +12,7 @@ type ControllerCommand struct {
 	PackageName        string
 	ControllerName     string
 	ModelName          string
+	ModelNamePlural    string
 	InstanceName       string
 	InstanceNamePlural string
 	RoutePath          string
@@ -35,6 +36,7 @@ func (command *ControllerCommand) Execute(args []string) {
 	command.ControllerName = args[0]
 	command.RoutePath = inflect.Underscore(command.ControllerName)
 	command.ModelName = inflect.Singularize(command.ControllerName)
+	command.ModelNamePlural = inflect.Pluralize(command.ModelName)
 
 	command.InstanceName = inflect.CamelizeDownFirst(command.ControllerName)
 	command.InstanceNamePlural = inflect.Pluralize(command.InstanceName)

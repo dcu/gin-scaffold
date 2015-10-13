@@ -23,7 +23,7 @@ func LoadTemplateFromFile(filePath string) string {
 func PackageName() string {
 	wd, _ := os.Getwd()
 
-	return strings.TrimLeft(wd, os.Getenv("GOPATH"))
+	return strings.TrimPrefix(wd, os.Getenv("GOPATH")+"/src/")
 }
 
 func ImportPath() string {
