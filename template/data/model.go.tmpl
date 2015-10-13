@@ -11,6 +11,7 @@ import (
 const (
 )
 
+// {{.ModelName}} is a model
 type {{.ModelName}} struct {
 	ID bson.ObjectId  `bson:"_id,omitempty"`
 {{range $fieldName, $fieldType := .Fields}}\
@@ -19,6 +20,7 @@ type {{.ModelName}} struct {
 	Errors helpers.Errors `bson:"-"`
 }
 
+// New{{.ModelName}} creates a new instance of {{.ModelName}}
 func New{{.ModelName}}() *{{.ModelName}} {
 	{{.InstanceName}} := &{{.ModelName}}{}
 
@@ -27,6 +29,7 @@ func New{{.ModelName}}() *{{.ModelName}} {
 	return {{.InstanceName}}
 }
 
+// Save saves the {{.ModelName}}
 func ({{.InstanceName}} *{{.ModelName}}) Save() bool {
 	isNewRecord := (len({{.InstanceName}}.ID) == 0)
 	if isNewRecord {
@@ -68,6 +71,7 @@ func ({{.InstanceName}} *{{.ModelName}}) update() bool {
 	return false
 }
 
+// ToResponseMap converts the {{.ModelName}} to a map to be returned by the API as a response.
 func ({{.InstanceName}} *{{.ModelName}}) ToResponseMap() helpers.ResponseMap {
 	return helpers.ResponseMap{
 		"id": {{.InstanceName}}.ID,
@@ -77,6 +81,7 @@ func ({{.InstanceName}} *{{.ModelName}}) ToResponseMap() helpers.ResponseMap {
 	}
 }
 
+// ErrorMessages returns validation errors.
 func ({{.InstanceName}} *{{.ModelName}}) ErrorMessages() helpers.ResponseMap {
 	errorMessages := helpers.ResponseMap{}
 	for fieldName, message := range {{.InstanceName}}.Errors.Messages {
@@ -86,6 +91,7 @@ func ({{.InstanceName}} *{{.ModelName}}) ErrorMessages() helpers.ResponseMap {
 	return errorMessages
 }
 
+// IsValid returns true if all validations are passed.
 func ({{.InstanceName}} *{{.ModelName}}) IsValid() bool {
 	{{.InstanceName}}.Errors.Clear()
 
@@ -94,6 +100,7 @@ func ({{.InstanceName}} *{{.ModelName}}) IsValid() bool {
 	return !{{.InstanceName}}.Errors.HasMessages()
 }
 
+// SetAttributes sets the attributes for this {{.ModelName}}
 func ({{.InstanceName}} *{{.ModelName}}) SetAttributes(params url.Values) {
 
 {{range $fieldName, $fieldType := .Fields}}\
