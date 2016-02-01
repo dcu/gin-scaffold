@@ -7,6 +7,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// {{.ControllerName}}Controller is the {{.ModelName}} controller.
 type {{.ControllerName}}Controller struct {
 	Router *gin.Engine
 }
@@ -68,6 +69,7 @@ func (controller *{{.ControllerName}}Controller) update{{.ModelName}}(c *gin.Con
 	}
 }
 
+// Setup sets up routes for the {{.ModelName}} controller.
 func (controller *{{.ControllerName}}Controller) Setup() {
 	controller.Router.POST("/{{.RoutePath}}", controller.create{{.ModelName}})
 	controller.Router.GET("/{{.RoutePath}}", controller.list{{.ControllerName}})

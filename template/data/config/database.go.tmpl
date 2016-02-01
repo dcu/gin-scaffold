@@ -12,6 +12,7 @@ var (
 	dbPrefix = "{{.DatabaseNamePrefix}}"
 )
 
+// DBSession returns the current db session.
 func DBSession() *mgo.Session {
 	if mongodbSession != nil {
 		return mongodbSession
@@ -32,10 +33,12 @@ func DBSession() *mgo.Session {
 	return mongodbSession
 }
 
+// DB returns a database given a name.
 func DB(name string) *mgo.Database {
 	return DBSession().DB(name)
 }
 
+// DefaultDB returns the default database.
 func DefaultDB() *mgo.Database {
 	switch Environment {
 	case "test":
