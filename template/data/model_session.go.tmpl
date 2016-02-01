@@ -50,3 +50,5 @@ func (session *{{.ModelName}}Session) database() *mgo.Database {
 func (session *{{.ModelName}}Session) collection() *mgo.Collection {
 	return session.database().C("{{.InstanceNamePlural  | Underscore}}")
 }
+
+// vi:syntax=go

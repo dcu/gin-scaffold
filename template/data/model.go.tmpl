@@ -6,6 +6,7 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"net/url"
+	"time"
 )
 
 const (
@@ -17,6 +18,8 @@ type {{.ModelName}} struct {
 {{range $fieldName, $fieldType := .Fields}}\
 	{{$fieldName}} {{$fieldType}} `bson:"{{$fieldName | Underscore}}"`
 {{end}}\
+	CreatedAt int64 `bson:"created_at"`
+	UpdatedAt int64 `bson:"updated_at"`
 	Errors helpers.Errors `bson:"-"`
 }
 
@@ -32,9 +35,7 @@ func New{{.ModelName}}() *{{.ModelName}} {
 // Save saves the {{.ModelName}}
 func ({{.InstanceName}} *{{.ModelName}}) Save() bool {
 	isNewRecord := (len({{.InstanceName}}.ID) == 0)
-	if isNewRecord {
-		{{.InstanceName}}.ID = bson.NewObjectId()
-	}
+	{{.InstanceName}}.setDefaultFields(isNewRecord)
 
 	if !{{.InstanceName}}.IsValid() {
 		return false
@@ -45,6 +46,15 @@ func ({{.InstanceName}} *{{.ModelName}}) Save() bool {
 	}
 
 	return {{.InstanceName}}.update()
+}
+
+func ({{.InstanceName}} *{{.ModelName}}) setDefaultFields(isNewRecord bool) {
+	if isNewRecord {
+		{{.InstanceName}}.ID = bson.NewObjectId()
+		{{.InstanceName}}.CreatedAt = time.Now().Unix()
+	} else {
+		{{.InstanceName}}.UpdatedAt = time.Now().Unix()
+	}
 }
 
 func ({{.InstanceName}} *{{.ModelName}}) insert() bool {
