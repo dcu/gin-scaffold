@@ -50,6 +50,10 @@ func (command *ControllerCommand) Execute(args []string) {
 	builder = template.NewBuilder("controller_helpers.go.tmpl")
 	builder.WriteToPath(outputPath, command)
 
+	outputPath = filepath.Join("controllers", "suite_test.go")
+	builder = template.NewBuilder("suite_test.go.tmpl")
+	builder.WriteToPath(outputPath, command)
+
 	command.insertIntoRoutes()
 }
 
