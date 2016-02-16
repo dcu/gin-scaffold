@@ -38,7 +38,7 @@ func (command *ControllerCommand) Execute(args []string) {
 	command.ModelName = inflect.Singularize(command.ControllerName)
 	command.ModelNamePlural = inflect.Pluralize(command.ModelName)
 
-	command.InstanceName = inflect.CamelizeDownFirst(command.ControllerName)
+	command.InstanceName = inflect.CamelizeDownFirst(command.ModelName)
 	command.InstanceNamePlural = inflect.Pluralize(command.InstanceName)
 	command.PackageName = template.PackageName()
 
