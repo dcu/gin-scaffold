@@ -58,7 +58,7 @@ func (command *ModelCommand) Execute(args []string) {
 	builder := template.NewBuilder("model.go.tmpl")
 	builder.WriteToPath(outputPath, command)
 
-	outputPath = filepath.Join("models", inflect.Underscore(command.ModelName)+"_session.go")
-	builder = template.NewBuilder("model_session.go.tmpl")
+	outputPath = filepath.Join("models", inflect.Underscore(command.ModelName)+"_dbsession.go")
+	builder = template.NewBuilder("model_dbsession.go.tmpl")
 	builder.WriteToPath(outputPath, command)
 }

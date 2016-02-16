@@ -58,7 +58,7 @@ func ({{.InstanceName}} *{{.ModelName}}) setDefaultFields(isNewRecord bool) {
 }
 
 func ({{.InstanceName}} *{{.ModelName}}) insert() bool {
-	session := New{{.ModelName}}Session()
+	session := New{{.ModelName}}DBSession()
 	defer session.Close()
 
 	err := session.Insert({{.InstanceName}})
@@ -70,7 +70,7 @@ func ({{.InstanceName}} *{{.ModelName}}) insert() bool {
 }
 
 func ({{.InstanceName}} *{{.ModelName}}) update() bool {
-	session := New{{.ModelName}}Session()
+	session := New{{.ModelName}}DBSession()
 	defer session.Close()
 
 	err := session.Update({{.InstanceName}})
@@ -125,7 +125,7 @@ func ({{.InstanceName}} *{{.ModelName}}) SetAttributes(params url.Values) {
 func FindOne{{.ModelName}}(query bson.M) *{{.ModelName}} {
 	{{.InstanceName}} := &{{.ModelName}}{}
 
-	session := New{{.ModelName}}Session()
+	session := New{{.ModelName}}DBSession()
 	defer session.Close()
 
 	criteria := session.Query(query)
