@@ -73,8 +73,8 @@ func (controller *{{.ControllerName}}Controller) update{{.ModelName}}(c *gin.Con
 func (controller *{{.ControllerName}}Controller) Setup() {
 	controller.Router.POST("/{{.RoutePath}}", controller.create{{.ModelName}})
 	controller.Router.GET("/{{.RoutePath}}", controller.list{{.ControllerName}})
-    controller.Router.GET("/{{.RoutePath}}/:{{.ControllerName | Underscore}}_id", controller.get{{.ModelName}})
-    controller.Router.PUT("/{{.RoutePath}}/:{{.ControllerName | Underscore}}_id", controller.update{{.ModelName}})
+    controller.Router.GET("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id", controller.get{{.ModelName}})
+    controller.Router.PUT("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id", controller.update{{.ModelName}})
 }
 
 // vi:syntax=go

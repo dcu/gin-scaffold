@@ -9,7 +9,7 @@ import (
 func find{{.ModelName}}ByID(c *gin.Context) (*models.{{.ModelName}}, *helpers.ResponseError) {
 	c.Request.ParseForm()
 
-	{{.InstanceName}} := models.FindOne{{.ModelName}}ByID(c.Params.ByName("id"))
+	{{.InstanceName}} := models.FindOne{{.ModelName}}ByID(c.Params.ByName("{{.InstanceName | Underscore}}_id"))
 	if {{.InstanceName}} == nil {
 		err := helpers.NewResponseError(404, "{{.ModelName}} not found.")
 		return nil, err
