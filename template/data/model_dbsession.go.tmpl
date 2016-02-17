@@ -18,7 +18,7 @@ type {{.ModelName}}DBSession struct {
 
 // New{{.ModelName}}DBSession creates a new database session.
 func New{{.ModelName}}DBSession() *{{.ModelName}}DBSession {
-	return &{{.ModelName}}Session{backend: config.DBSession().Copy()}
+	return &{{.ModelName}}DBSession{backend: config.DBSession().Copy()}
 }
 
 // Close closes the database session.

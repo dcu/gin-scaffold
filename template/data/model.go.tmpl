@@ -32,9 +32,9 @@ func New{{.ModelName}}() *{{.ModelName}} {
 	return {{.InstanceName}}
 }
 
-// Save saves the {{.ModelName}}
-func ({{.InstanceName}} *{{.ModelName}}) Save() bool {
-	isNewRecord := (len({{.InstanceName}}.ID) == 0)
+// SaveWithSession saves the {{.ModelName}} using the given db session
+func ({{.InstanceName}} *{{.ModelName}}) SaveWithSession(dbSession *{{.ModelName}}DBSession) bool {
+    isNewRecord := (len({{.InstanceName}}.ID) == 0)
 	{{.InstanceName}}.setDefaultFields(isNewRecord)
 
 	if !{{.InstanceName}}.IsValid() {
@@ -42,10 +42,19 @@ func ({{.InstanceName}} *{{.ModelName}}) Save() bool {
 	}
 
 	if isNewRecord {
-		return {{.InstanceName}}.insert()
+		return {{.InstanceName}}.insert(dbSession)
 	}
 
-	return {{.InstanceName}}.update()
+	return {{.InstanceName}}.update(dbSession)
+
+}
+
+// Save saves the {{.ModelName}}
+func ({{.InstanceName}} *{{.ModelName}}) Save() bool {
+	dbSession := New{{.ModelName}}DBSession()
+	defer dbSession.Close()
+
+    return {{.InstanceName}}.SaveWithSession(dbSession)
 }
 
 func ({{.InstanceName}} *{{.ModelName}}) setDefaultFields(isNewRecord bool) {
@@ -57,11 +66,8 @@ func ({{.InstanceName}} *{{.ModelName}}) setDefaultFields(isNewRecord bool) {
 	}
 }
 
-func ({{.InstanceName}} *{{.ModelName}}) insert() bool {
-	session := New{{.ModelName}}DBSession()
-	defer session.Close()
-
-	err := session.Insert({{.InstanceName}})
+func ({{.InstanceName}} *{{.ModelName}}) insert(dbSession *{{.ModelName}}DBSession) bool {
+	err := dbSession.Insert({{.InstanceName}})
 	if err == nil {
 		return true
 	}
@@ -69,11 +75,8 @@ func ({{.InstanceName}} *{{.ModelName}}) insert() bool {
 	return false
 }
 
-func ({{.InstanceName}} *{{.ModelName}}) update() bool {
-	session := New{{.ModelName}}DBSession()
-	defer session.Close()
-
-	err := session.Update({{.InstanceName}})
+func ({{.InstanceName}} *{{.ModelName}}) update(dbSession *{{.ModelName}}DBSession) bool {
+	err := dbSession.Update({{.InstanceName}})
 	if err == nil {
 		return true
 	}
@@ -125,10 +128,10 @@ func ({{.InstanceName}} *{{.ModelName}}) SetAttributes(params url.Values) {
 func FindOne{{.ModelName}}(query bson.M) *{{.ModelName}} {
 	{{.InstanceName}} := &{{.ModelName}}{}
 
-	session := New{{.ModelName}}DBSession()
-	defer session.Close()
+	dbSession := New{{.ModelName}}DBSession()
+	defer dbSession.Close()
 
-	criteria := session.Query(query)
+	criteria := dbSession.Query(query)
 	err := criteria.One({{.InstanceName}})
 	if err != nil {
 		panic(err)
