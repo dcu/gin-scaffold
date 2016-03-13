@@ -7,9 +7,12 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"net/url"
 	"time"
+	"errors"
 )
 
-const (
+var (
+	// ErrInvalidDoc is return when the document is not valid
+	ErrInvalidDoc = errors.New("document is invalid")
 )
 
 // {{.ModelName}} is a model
@@ -33,12 +36,12 @@ func New{{.ModelName}}() *{{.ModelName}} {
 }
 
 // SaveWithSession saves the {{.ModelName}} using the given db session
-func ({{.InstanceName}} *{{.ModelName}}) SaveWithSession(dbSession *{{.ModelName}}DBSession) bool {
+func ({{.InstanceName}} *{{.ModelName}}) SaveWithSession(dbSession *{{.ModelName}}DBSession) error {
     isNewRecord := (len({{.InstanceName}}.ID) == 0)
 	{{.InstanceName}}.setDefaultFields(isNewRecord)
 
 	if !{{.InstanceName}}.IsValid() {
-		return false
+		return errInvalidDoc
 	}
 
 	if isNewRecord {
@@ -50,7 +53,7 @@ func ({{.InstanceName}} *{{.ModelName}}) SaveWithSession(dbSession *{{.ModelName
 }
 
 // Save saves the {{.ModelName}}
-func ({{.InstanceName}} *{{.ModelName}}) Save() bool {
+func ({{.InstanceName}} *{{.ModelName}}) Save() error {
 	dbSession := New{{.ModelName}}DBSession()
 	defer dbSession.Close()
 
@@ -66,22 +69,12 @@ func ({{.InstanceName}} *{{.ModelName}}) setDefaultFields(isNewRecord bool) {
 	}
 }
 
-func ({{.InstanceName}} *{{.ModelName}}) insert(dbSession *{{.ModelName}}DBSession) bool {
-	err := dbSession.Insert({{.InstanceName}})
-	if err == nil {
-		return true
-	}
-
-	return false
+func ({{.InstanceName}} *{{.ModelName}}) insert(dbSession *{{.ModelName}}DBSession) error {
+	return dbSession.Insert({{.InstanceName}})
 }
 
-func ({{.InstanceName}} *{{.ModelName}}) update(dbSession *{{.ModelName}}DBSession) bool {
-	err := dbSession.Update({{.InstanceName}})
-	if err == nil {
-		return true
-	}
-
-	return false
+func ({{.InstanceName}} *{{.ModelName}}) update(dbSession *{{.ModelName}}DBSession) error {
+	return dbSession.Update({{.InstanceName}})
 }
 
 // ToResponseMap converts the {{.ModelName}} to a map to be returned by the API as a response.
@@ -125,7 +118,7 @@ func ({{.InstanceName}} *{{.ModelName}}) SetAttributes(params url.Values) {
 }
 
 // FindOne{{.ModelName}} finds a {{.InstanceName}} in the database using the given `query`
-func FindOne{{.ModelName}}(query bson.M) *{{.ModelName}} {
+func FindOne{{.ModelName}}(query bson.M) (*{{.ModelName}}, error) {
 	{{.InstanceName}} := &{{.ModelName}}{}
 
 	dbSession := New{{.ModelName}}DBSession()
@@ -134,30 +127,28 @@ func FindOne{{.ModelName}}(query bson.M) *{{.ModelName}} {
 	criteria := dbSession.Query(query)
 	err := criteria.One({{.InstanceName}})
 	if err != nil {
-		panic(err)
+        return nil, err
 	}
 
-	return {{.InstanceName}}
+	return {{.InstanceName}}, nil
 }
 
 // FindOne{{.ModelName}}ByID finds a {{.ModelName}} in the database using the given `id`
-func FindOne{{.ModelName}}ByID(id string) *{{.ModelName}} {
+func FindOne{{.ModelName}}ByID(id string) (*{{.ModelName}}, error) {
 	{{.InstanceName}}ID := bson.ObjectIdHex(id)
-	{{.InstanceName}} := FindOne{{.ModelName}}(bson.M{"_id": {{.InstanceName}}ID})
-
-	return {{.InstanceName}}
+	return FindOne{{.ModelName}}(bson.M{"_id": {{.InstanceName}}ID})
 }
 
 // Load{{.ModelNamePlural}} takes a query a tries to convert it into a {{.ModelName}} array.
-func Load{{.ModelNamePlural}}(query *mgo.Query) []*{{.ModelName}} {
+func Load{{.ModelNamePlural}}(query *mgo.Query) ([]*{{.ModelName}}, error) {
 	{{.InstanceNamePlural}} := []*{{.ModelName}}{}
 
 	err := query.All(&{{.InstanceNamePlural}})
 	if err != nil {
-		helpers.HandleDBError(err)
+        return {{.InstanceNamePlural}}, err
 	}
 
-	return {{.InstanceNamePlural}}
+	return {{.InstanceNamePlural}}, nil
 }
 
 // vi:syntax=go
