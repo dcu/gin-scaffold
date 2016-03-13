@@ -119,15 +119,19 @@ func ({{.InstanceName}} *{{.ModelName}}) SetAttributes(params url.Values) {
 
 // FindOne{{.ModelName}} finds a {{.InstanceName}} in the database using the given `query`
 func FindOne{{.ModelName}}(query bson.M) (*{{.ModelName}}, error) {
-	{{.InstanceName}} := &{{.ModelName}}{}
-
 	dbSession := New{{.ModelName}}DBSession()
 	defer dbSession.Close()
 
 	criteria := dbSession.Query(query)
+	return FindOne{{.ModelName}}ByCriteria(criteria)
+}
+
+// FindOne{{.ModelName}}ByCriteria finds a single document given a criteria
+func FindOne{{.ModelName}}ByCriteria(criteria *mgo.Query) (*{{.ModelName}}, error) {
+	{{.InstanceName}} := &{{.ModelName}}{}
 	err := criteria.One({{.InstanceName}})
 	if err != nil {
-        return nil, err
+		return nil, err
 	}
 
 	return {{.InstanceName}}, nil
