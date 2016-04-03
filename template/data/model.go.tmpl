@@ -60,6 +60,19 @@ func ({{.InstanceName}} *{{.ModelName}}) Save() error {
     return {{.InstanceName}}.SaveWithSession(dbSession)
 }
 
+func ({{.InstanceName}} *{{.ModelName}}) DeleteWithSession(dbSession *{{.ModelName}}DBSession) error {
+	return dbSession.Delete(bson.M{
+		"_id": {{.InstanceName}}.ID,
+	})
+}
+
+func ({{.InstanceName}} *{{.ModelName}}) Delete() error {
+	dbSession := New{{.ModelName}}DBSession()
+	defer dbSession.Close()
+
+	return {{.InstanceName}}.DeleteWithSession(dbSession)
+}
+
 func ({{.InstanceName}} *{{.ModelName}}) setDefaultFields(isNewRecord bool) {
 	if isNewRecord {
 		{{.InstanceName}}.ID = bson.NewObjectId()

@@ -43,6 +43,17 @@ func (dbSession *{{.ModelName}}DBSession) Query(query bson.M) *mgo.Query {
 	return criteria
 }
 
+// Delete deletes a single {{.InstanceName}} that matches the given query.
+func (dbSession *{{.ModelName}}DBSession) Delete(query bson.M) error {
+	return dbSession.collection().Remove(query)
+}
+
+// DeleteAll deletes all instances of {{.InstanceName}} that match the given query.
+func (dbSession *{{.ModelName}}DBSession) DeleteAll(query bson.M) (int, error) {
+	info, err := dbSession.collection().RemoveAll(query)
+	return info.Removed, err
+}
+
 func (dbSession *{{.ModelName}}DBSession) database() *mgo.Database {
 	return dbSession.backend.DB(config.DefaultDBName)
 }

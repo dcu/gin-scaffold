@@ -7,6 +7,14 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+var (
+	// Err{{.ModelName}}NotFound is returned when the {{.InstanceName}} was not found.
+	Err{{.ModelName}}NotFound     = helpers.NewResponseError(404, "{{.InstanceName}} not found")
+
+	// ErrCannotDelete{{.ModelName}} is returned when the {{.InstanceName}} can't be deleted.
+	ErrCannotDelete{{.ModelName}} = helpers.NewResponseError(404, "cannot delete {{.InstanceName}}")
+)
+
 // {{.ControllerName}}Controller is the {{.ModelName}} controller.
 type {{.ControllerName}}Controller struct {
 	Router *gin.Engine
@@ -69,12 +77,29 @@ func (controller *{{.ControllerName}}Controller) update{{.ModelName}}(c *gin.Con
 	}
 }
 
+func (controller *{{.ControllerName}}Controller) delete{{.ModelName}}(c *gin.Context) {
+	{{.InstanceName}}, err := find{{.ModelName}}ByID(c)
+
+	if err != nil {
+		helpers.JSONResponseError(c, err)
+		return
+	}
+
+	if err := {{.InstanceName}}.Delete(); err == nil {
+		helpers.JSONResponse(c, 200, helpers.ResponseMap{})
+		return
+	}
+
+	helpers.JSONResponseError(c, ErrCannotDelete{{.ModelName}})
+}
+
 // Setup sets up routes for the {{.ModelName}} controller.
 func (controller *{{.ControllerName}}Controller) Setup() {
 	controller.Router.POST("/{{.RoutePath}}", controller.create{{.ModelName}})
 	controller.Router.GET("/{{.RoutePath}}", controller.list{{.ControllerName}})
     controller.Router.GET("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id", controller.get{{.ModelName}})
     controller.Router.PUT("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id", controller.update{{.ModelName}})
+    controller.Router.DELETE("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id", controller.delete{{.ModelName}})
 }
 
 // vi:syntax=go
