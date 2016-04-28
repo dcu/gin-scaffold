@@ -9,11 +9,11 @@ For now the project only supports `mongodb` and `mgo` as database.
 
 ## Initializing a project
 
-	git-scaffold init <project path>
+	gin-scaffold init <project path>
 
 ## Creating a model
 
-	git-scaffold model <model name> <field name>:<field type>
+	gin-scaffold model <model name> <field name>:<field type>
 
 ## Creating a controller
 
