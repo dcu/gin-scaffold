@@ -41,7 +41,7 @@ func ({{.InstanceName}} *{{.ModelName}}) SaveWithSession(dbSession *{{.ModelName
 	{{.InstanceName}}.setDefaultFields(isNewRecord)
 
 	if !{{.InstanceName}}.IsValid() {
-		return errInvalidDoc
+		return ErrInvalidDoc
 	}
 
 	if isNewRecord {
