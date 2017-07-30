@@ -1,6 +1,6 @@
 # Gin Scaffold
 
-Gin scaffold is CLI to generate scaffolds for the `gin` framework.
+`Gin Scaffold` is CLI to generate scaffolds for the `gin` framework.
 For now the project only supports `mongodb` and `mgo` as database.
 
 ## Installation
