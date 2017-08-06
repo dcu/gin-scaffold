@@ -26,7 +26,7 @@ func (controller *{{.ControllerName}}Controller) create{{.ModelName}}(c *gin.Con
 	{{.InstanceName}} := &models.{{.ModelName}}{}
 	{{.InstanceName}}.SetAttributes(c.Request.Form)
 
-	if {{.InstanceName}}.Save() {
+	if {{.InstanceName}}.Save() != nil {
 		helpers.JSONResponseObject(c, 200, {{.InstanceName}})
 	} else {
 		helpers.JSONResponse(c, 400, {{.InstanceName}}.ErrorMessages())
@@ -40,7 +40,7 @@ func (controller *{{.ControllerName}}Controller) list{{.ModelNamePlural}}(c *gin
 	query := session.Query(bson.M{})
 	query.Sort("-created_at").Limit(20)
 
-	{{.InstanceNamePlural}} := models.Load{{.ModelNamePlural}}(query)
+	{{.InstanceNamePlural}}, _ := models.Load{{.ModelNamePlural}}(query)
 	{{.InstanceNamePlural}}Response := make([]helpers.ResponseMap, len({{.InstanceNamePlural}}))
 	for i, {{.InstanceNamePlural}} := range {{.InstanceNamePlural}} {
 		{{.InstanceNamePlural}}Response[i] = {{.InstanceNamePlural}}.ToResponseMap()
@@ -70,7 +70,7 @@ func (controller *{{.ControllerName}}Controller) update{{.ModelName}}(c *gin.Con
 
 	{{.InstanceName}}.SetAttributes(c.Request.Form)
 
-	if {{.InstanceName}}.Save() {
+	if {{.InstanceName}}.Save() != nil {
 		helpers.JSONResponseObject(c, 200, {{.InstanceName}})
 	} else {
 		helpers.JSONResponse(c, 400, {{.InstanceName}}.ErrorMessages())
