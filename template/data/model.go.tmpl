@@ -7,6 +7,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"net/url"
 	"time"
+	"strconv"
 	"errors"
 )
 
@@ -124,7 +125,7 @@ func ({{.InstanceName}} *{{.ModelName}}) SetAttributes(params url.Values) {
 
 {{range $fieldName, $fieldType := .Fields}}\
 	if value, ok := params["{{$fieldName | Underscore}}"]; ok {
-		{{$instanceName}}.{{$fieldName}} = value[0]
+		{{$instanceName}}.{{$fieldName}}{{ ret $fieldType }} = {{ conv "value[0]" $fieldType }}
 	}
 {{end}}\
 
