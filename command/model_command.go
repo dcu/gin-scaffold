@@ -45,7 +45,7 @@ func processFields(args []string) map[string]string {
 
 // Execute runs this command.
 func (command *ModelCommand) Execute(args []string) {
-	command.ModelName = command.ModelName = inflect.Titleize(args[0])
+	command.ModelName = inflect.Titleize(args[0])
 	command.ModelNamePlural = inflect.Pluralize(command.ModelName)
 
 	command.Fields = processFields(args[1:])
