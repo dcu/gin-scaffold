@@ -10,12 +10,41 @@ import (
 	"text/template"
 )
 
+type state struct {
+	n int
+}
+
+func (s *state) Set(n int) int {
+	s.n = n
+	return n
+}
+
+func (s *state) Inc() int {
+	s.n++
+	return s.n
+}
+
+var s state
 var (
 	funcMap = template.FuncMap{
 		"Pluralize":  inflect.Pluralize,
 		"Underscore": inflect.Underscore,
 		"ToUpper":    strings.ToUpper,
 		"ToLower":    strings.ToLower,
+		"set": s.Set,
+		"inc": s.Inc,
+		"ret": func(fieldType string) string {
+			if fieldType == "int" {
+				return ", _"
+			}
+			return ""
+		},
+		"conv": func(origin string, fieldType string) string {
+			if fieldType == "int" {
+				return "strconv.Atoi(" + origin + ")"
+			}
+			return origin
+		},
 	}
 )
 
