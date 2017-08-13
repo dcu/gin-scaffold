@@ -46,7 +46,7 @@ func (command *InitCommand) Execute(args []string) {
 	command.ProjectName = filepath.Base(projectDir)
 	command.ProjectDir = projectDir
 	command.DatabaseNamePrefix = filepath.Base(projectDir)
-	command.PackageName = filepath.Join(template.PackageName(), command.ProjectName)
+	command.PackageName = command.ProjectName
 	command.createLayout()
 
 	command.installFiles("helpers")
