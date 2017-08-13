@@ -23,3 +23,11 @@ For now the project only supports `mongodb` and `mgo` as database.
 
 	gin-scaffold scaffold <controller name> <field name>:<field type>
 
+## Running
+
+	go run <project name>.go
+
+## Accessing
+
+	Open browser, and access to `http://localhost:4000`. (Default port:4000)
+

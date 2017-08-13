@@ -23,3 +23,11 @@
 
 	gin-scaffold scaffold <コントローラ名> <フィールド名>:<タイプ名>
 
+## プロジェクトの起動
+
+	gin run <project path>.go
+
+## アクセス
+
+	ブラウザを起動して、`http://localhost:4000`へアクセス。（デフォルトポート:4000）
+
