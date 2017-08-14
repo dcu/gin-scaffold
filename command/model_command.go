@@ -37,7 +37,7 @@ func processFields(args []string) map[string]string {
 	fields := map[string]string{}
 	for _, arg := range args {
 		fieldNameAndType := strings.SplitN(arg, ":", 2)
-		fields[fieldNameAndType[0]] = fieldNameAndType[1]
+		fields[inflect.Titleize(fieldNameAndType[0])] = fieldNameAndType[1]
 	}
 
 	return fields
