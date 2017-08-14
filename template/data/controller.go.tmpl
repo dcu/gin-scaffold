@@ -26,7 +26,8 @@ func (controller *{{.ControllerName}}Controller) create{{.ModelName}}(c *gin.Con
 	{{.InstanceName}} := &models.{{.ModelName}}{}
 	{{.InstanceName}}.SetAttributes(c.Request.Form)
 
-	if {{.InstanceName}}.Save() != nil {
+	defer {{.InstanceName}}.Save()
+	if len({{.InstanceName}}.ErrorMessages()) == 0 {
 		helpers.JSONResponseObject(c, 200, {{.InstanceName}})
 	} else {
 		helpers.JSONResponse(c, 400, {{.InstanceName}}.ErrorMessages())
@@ -70,7 +71,8 @@ func (controller *{{.ControllerName}}Controller) update{{.ModelName}}(c *gin.Con
 
 	{{.InstanceName}}.SetAttributes(c.Request.Form)
 
-	if {{.InstanceName}}.Save() != nil {
+	defer {{.InstanceName}}.Save()
+	if len({{.InstanceName}}.ErrorMessages()) == 0 {
 		helpers.JSONResponseObject(c, 200, {{.InstanceName}})
 	} else {
 		helpers.JSONResponse(c, 400, {{.InstanceName}}.ErrorMessages())
