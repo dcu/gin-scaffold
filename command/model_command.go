@@ -32,12 +32,41 @@ Example:
 `)
 }
 
+func findFieldType(name string) string {
+	switch name {
+	case "text":
+		{
+		name = "string"
+		}
+	case "float":
+		{
+		name = "float64"
+		}
+	case "boolean":
+		{
+		name = "bool"
+		}
+	case "integer":
+		{
+		name = "int"
+		}
+	case
+		"time",
+		"datetime":
+		{
+		name = "int64"
+		}
+	}
+
+	return name
+}
+
 // Converts "<fieldname>:<type>" to {"<fieldname>": "<type>"}
 func processFields(args []string) map[string]string {
 	fields := map[string]string{}
 	for _, arg := range args {
 		fieldNameAndType := strings.SplitN(arg, ":", 2)
-		fields[inflect.Titleize(fieldNameAndType[0])] = fieldNameAndType[1]
+		fields[inflect.Titleize(fieldNameAndType[0])] = findFieldType(fieldNameAndType[1])
 	}
 
 	return fields
