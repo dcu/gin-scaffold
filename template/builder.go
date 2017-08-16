@@ -34,7 +34,11 @@ var (
 		"set": s.Set,
 		"inc": s.Inc,
 		"ret": func(fieldType string) string {
-			if fieldType == "int" {
+			switch fieldType {
+			case
+				"int",
+				"float64",
+				"bool":
 				return ", _"
 			}
 			return ""
@@ -42,6 +46,10 @@ var (
 		"conv": func(origin string, fieldType string) string {
 			if fieldType == "int" {
 				return "strconv.Atoi(" + origin + ")"
+			} else if fieldType == "float64" {
+				return "strconv.ParseFloat(" + origin + ", 64)"
+			} else if fieldType == "bool" {
+				return "strconv.ParseBool(" + origin + ")"
 			}
 			return origin
 		},
