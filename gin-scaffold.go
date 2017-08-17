@@ -28,7 +28,7 @@ func checkGOPATH() {
 	wd = filepath.ToSlash(wd)
 	found := false
 	for _, p := range filepath.SplitList(os.Getenv("GOPATH")) {
-		if strings.HasPrefix(wd, filepath.ToSlash(p)) {
+		if strings.HasPrefix(strings.ToLower(wd), strings.ToLower(filepath.ToSlash(p))) {
 			found = true
 			break
 		}
