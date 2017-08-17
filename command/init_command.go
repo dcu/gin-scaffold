@@ -4,6 +4,7 @@ import (
 	//"fmt"
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -48,10 +49,20 @@ func (command *InitCommand) Execute(args []string) {
 		panic(err)
 	}
 
+	wd, _ := os.Getwd()
+	wd = filepath.ToSlash(wd)
+	root := ""
+	for _, p := range filepath.SplitList(os.Getenv("GOPATH")) {
+		p = filepath.ToSlash(p)
+		if strings.HasPrefix(strings.ToLower(wd), strings.ToLower(p)) {
+			root = wd[len(p+"/src/"):]
+		}
+	}
+
 	command.ProjectName = filepath.Base(projectDir)
 	command.ProjectDir = projectDir
 	command.DatabaseNamePrefix = filepath.Base(projectDir)
-	command.PackageName = command.ProjectName
+	command.PackageName = path.Join(root, command.ProjectName)
 	command.createLayout()
 
 	command.installFiles("helpers")
