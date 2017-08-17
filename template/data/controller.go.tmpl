@@ -98,7 +98,7 @@ func (controller *{{.ControllerName}}Controller) delete{{.ModelName}}(c *gin.Con
 // Setup sets up routes for the {{.ModelName}} controller.
 func (controller *{{.ControllerName}}Controller) Setup() {
 	controller.Router.POST("/{{.RoutePath}}", controller.create{{.ModelName}})
-	controller.Router.GET("/{{.RoutePath}}", controller.list{{.ControllerName}}s)
+	controller.Router.GET("/{{.RoutePath}}", controller.list{{.ModelNamePlural}})
 	controller.Router.GET("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id", controller.get{{.ModelName}})
 	controller.Router.PUT("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id", controller.update{{.ModelName}})
 	controller.Router.DELETE("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id", controller.delete{{.ModelName}})
