@@ -34,9 +34,23 @@ func PackageName() string {
 }
 
 func ImportPath() string {
-	return os.Getenv("GOPATH") + "/src/github.com/dcu/gin-scaffold"
+	paths := filepath.SplitList(os.Getenv("GOPATH"))
+	wd, _ := os.Getwd()
+	wd = filepath.ToSlash(wd)
+	found := ""
+	for _, p := range paths {
+		p = filepath.ToSlash(p)
+		if strings.HasPrefix(strings.ToLower(wd), strings.ToLower(p)) {
+			found = p
+			break
+		}
+	}
+	if found == "" {
+		found = paths[0]
+	}
+	return filepath.Join(found, "src/github.com/dcu/gin-scaffold")
 }
 
 func TemplatePath(name string) string {
-	return ImportPath() + "/template/data/" + name
+	return filepath.Join(ImportPath(), "template/data", name)
 }
