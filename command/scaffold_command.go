@@ -1,8 +1,10 @@
 package command
 
 import (
-	"bitbucket.org/pkg/inflect"
 	"fmt"
+	"os"
+
+	"bitbucket.org/pkg/inflect"
 )
 
 type ScaffoldCommand struct {
@@ -21,6 +23,10 @@ Example:
 }
 
 func (command *ScaffoldCommand) Execute(args []string) {
+	if len(args) == 0 {
+		command.Help()
+		os.Exit(2)
+	}
 	args[0] = inflect.Singularize(args[0])
 	modelCommand := &ModelCommand{}
 	modelCommand.Execute(args)

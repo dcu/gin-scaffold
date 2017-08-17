@@ -2,10 +2,12 @@ package command
 
 import (
 	//"fmt"
-	"bitbucket.org/pkg/inflect"
 	"fmt"
-	"github.com/dcu/gin-scaffold/template"
+	"os"
 	"path/filepath"
+
+	"bitbucket.org/pkg/inflect"
+	"github.com/dcu/gin-scaffold/template"
 )
 
 type ControllerCommand struct {
@@ -33,6 +35,10 @@ Example:
 }
 
 func (command *ControllerCommand) Execute(args []string) {
+	if len(args) == 0 {
+		command.Help()
+		os.Exit(2)
+	}
 	command.ControllerName = args[0]
 	command.RoutePath = inflect.Underscore(command.ControllerName)
 	command.ModelName = inflect.Singularize(command.ControllerName)

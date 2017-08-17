@@ -1,11 +1,13 @@
 package command
 
 import (
-	"bitbucket.org/pkg/inflect"
 	"fmt"
-	"github.com/dcu/gin-scaffold/template"
+	"os"
 	"path/filepath"
 	"strings"
+
+	"bitbucket.org/pkg/inflect"
+	"github.com/dcu/gin-scaffold/template"
 )
 
 // ModelCommand generates files related to model.
@@ -45,6 +47,10 @@ func processFields(args []string) map[string]string {
 
 // Execute runs this command.
 func (command *ModelCommand) Execute(args []string) {
+	if len(args) < 3 {
+		command.Help()
+		os.Exit(2)
+	}
 	command.ModelName = inflect.Titleize(args[0])
 	command.ModelNamePlural = inflect.Pluralize(command.ModelName)
 

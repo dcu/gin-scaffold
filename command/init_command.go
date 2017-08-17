@@ -3,10 +3,11 @@ package command
 import (
 	//"fmt"
 	"fmt"
-	"github.com/dcu/gin-scaffold/template"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/dcu/gin-scaffold/template"
 )
 
 var (
@@ -38,6 +39,10 @@ Example:
 }
 
 func (command *InitCommand) Execute(args []string) {
+	if len(args) == 0 {
+		command.Help()
+		os.Exit(2)
+	}
 	projectDir, err := filepath.Abs(args[0])
 	if err != nil {
 		panic(err)
