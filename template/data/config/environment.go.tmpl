@@ -25,7 +25,7 @@ func init() {
 	if Environment == "production" {
 		gin.SetMode(gin.ReleaseMode)
 		tmpdir := filepath.Join(os.TempDir(), "{{.ProjectName}}")
-        os.MkdirAll(tmpdir, 0700)
+		os.MkdirAll(tmpdir, 0700)
 		logFileName := filepath.Join(tmpdir, fmt.Sprintf("%s-%d.log", Environment, time.Now().Unix()))
 		logFile, err := os.Create(logFileName)
 
