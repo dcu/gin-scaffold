@@ -1,12 +1,13 @@
 package command
 
 import (
-	//"fmt"
 	"fmt"
-	"github.com/dcu/gin-scaffold/template"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
+
+	"github.com/dcu/gin-scaffold/template"
 )
 
 var (
@@ -38,15 +39,29 @@ Example:
 }
 
 func (command *InitCommand) Execute(args []string) {
+	if len(args) == 0 {
+		command.Help()
+		os.Exit(2)
+	}
 	projectDir, err := filepath.Abs(args[0])
 	if err != nil {
 		panic(err)
 	}
 
+	wd, _ := os.Getwd()
+	wd = filepath.ToSlash(wd)
+	root := ""
+	for _, p := range filepath.SplitList(os.Getenv("GOPATH")) {
+		p = filepath.ToSlash(p)
+		if strings.HasPrefix(strings.ToLower(wd), strings.ToLower(p)) {
+			root = wd[len(p+"/src/"):]
+		}
+	}
+
 	command.ProjectName = filepath.Base(projectDir)
 	command.ProjectDir = projectDir
 	command.DatabaseNamePrefix = filepath.Base(projectDir)
-	command.PackageName = command.ProjectName
+	command.PackageName = path.Join(root, command.ProjectName)
 	command.createLayout()
 
 	command.installFiles("helpers")

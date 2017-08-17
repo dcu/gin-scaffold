@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/dcu/gin-scaffold/command"
 	"os"
+	"path/filepath"
 	"strings"
+
+	"github.com/dcu/gin-scaffold/command"
 )
 
 func printUsageAndExit() {
@@ -23,7 +25,15 @@ func checkGOPATH() {
 	}
 
 	wd, _ := os.Getwd()
-	if !strings.HasPrefix(wd, os.Getenv("GOPATH")) {
+	wd = filepath.ToSlash(wd)
+	found := false
+	for _, p := range filepath.SplitList(os.Getenv("GOPATH")) {
+		if strings.HasPrefix(strings.ToLower(wd), strings.ToLower(filepath.ToSlash(p))) {
+			found = true
+			break
+		}
+	}
+	if !found {
 		fmt.Printf("%s is not in the $GOPATH. Exiting.\n", wd)
 		os.Exit(3)
 	}

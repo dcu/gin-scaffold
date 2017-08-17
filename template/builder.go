@@ -1,13 +1,14 @@
 package template
 
 import (
-	"bitbucket.org/pkg/inflect"
 	"bufio"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	"bitbucket.org/pkg/inflect"
 )
 
 type state struct {
@@ -31,8 +32,8 @@ var (
 		"Underscore": inflect.Underscore,
 		"ToUpper":    strings.ToUpper,
 		"ToLower":    strings.ToLower,
-		"set": s.Set,
-		"inc": s.Inc,
+		"set":        s.Set,
+		"inc":        s.Inc,
 		"ret": func(fieldType string) string {
 			switch fieldType {
 			case
@@ -62,7 +63,7 @@ type Builder struct {
 }
 
 func NewBuilder(templatePath string) *Builder {
-	if templatePath[0:1] != "/" {
+	if !filepath.IsAbs(templatePath) {
 		templatePath = TemplatePath(templatePath)
 	}
 
