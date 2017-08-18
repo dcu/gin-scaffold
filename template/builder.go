@@ -116,7 +116,6 @@ func (builder *Builder) InsertAfterToPath(outputPath string, after string, data 
 	if err != nil {
 		panic(err)
 	}
-	defer file.Close()
 
 	outputFile, err := os.Create(newFilePath)
 	if err != nil {
@@ -137,6 +136,7 @@ func (builder *Builder) InsertAfterToPath(outputPath string, after string, data 
 
 	writer.Flush()
 	outputFile.Close()
+	file.Close()
 
 	os.Rename(newFilePath, outputPath)
 }
