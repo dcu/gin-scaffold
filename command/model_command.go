@@ -52,8 +52,13 @@ func findFieldType(name string) string {
 		{
 		name = "int"
 		}
+	case "decimal":
+		{
+		name = "int64"
+		}
 	case
 		"time",
+		"date",
 		"datetime":
 		{
 		name = "int64"
