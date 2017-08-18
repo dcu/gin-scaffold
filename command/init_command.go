@@ -53,7 +53,7 @@ func (command *InitCommand) Execute(args []string) {
 	root := ""
 	for _, p := range filepath.SplitList(os.Getenv("GOPATH")) {
 		p = filepath.ToSlash(p)
-		if strings.HasPrefix(strings.ToLower(wd), strings.ToLower(p)) {
+		if strings.HasPrefix(strings.ToLower(wd), strings.ToLower(filepath.ToSlash(filepath.Join(p, "src"))+"/")) {
 			root = wd[len(p+"/src/"):]
 		}
 	}
