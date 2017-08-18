@@ -126,7 +126,12 @@ func ({{.InstanceName}} *{{.ModelName}}) SetAttributes(params url.Values) {
 
 {{range $fieldName, $fieldType := .Fields}}\
 	if value, ok := params["{{$fieldName | Underscore}}"]; ok {
+{{if is_cast $fieldType }}\
+		tmp, _ := {{ conv "value[0]" $fieldType }}
+		{{$instanceName}}.{{$fieldName}} = {{ $fieldType }}(tmp)
+{{else}}\
 		{{$instanceName}}.{{$fieldName}}{{ ret $fieldType }} = {{ conv "value[0]" $fieldType }}
+{{end}}\
 	}
 {{end}}\
 }

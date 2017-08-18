@@ -34,11 +34,23 @@ var (
 		"ToLower":    strings.ToLower,
 		"set":        s.Set,
 		"inc":        s.Inc,
+		"is_cast": func(fieldType string) bool {
+			switch fieldType {
+			case
+				"int16",
+				"int32":
+				return true
+			}
+			return false
+		},
 		"ret": func(fieldType string) string {
 			switch fieldType {
 			case
 				"int",
 				"float64",
+				"int16",
+				"int32",
+				"int64",
 				"bool":
 				return ", _"
 			}
@@ -47,6 +59,12 @@ var (
 		"conv": func(origin string, fieldType string) string {
 			if fieldType == "int" {
 				return "strconv.Atoi(" + origin + ")"
+			} else if fieldType == "int16" {
+				return "strconv.ParseInt(" + origin + ", 10, 16)"
+			} else if fieldType == "int32" {
+				return "strconv.ParseInt(" + origin + ", 10, 32)"
+			} else if fieldType == "int64" {
+				return "strconv.ParseInt(" + origin + ", 10, 64)"
 			} else if fieldType == "float64" {
 				return "strconv.ParseFloat(" + origin + ", 64)"
 			} else if fieldType == "bool" {
