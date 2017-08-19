@@ -1,5 +1,10 @@
 # Gin Scaffold
 
+[![Godoc Reference](https://godoc.org/github.com/dcu/gin-scaffold?status.svg)](http://godoc.org/github.com/dcu/gin-scaffold)
+[![Build Status](https://travis-ci.org/dcu/gin-scaffold.svg?branch=master)](https://travis-ci.org/dcu/gin-scaffold)
+[![Coverage Status](https://coveralls.io/repos/github/mattn/go-colorable/badge.svg?branch=master)](https://coveralls.io/github/dcu/gin-scaffold?branch=master)
+[![Go Report Card](https://goreportcard.com/badge/dcu/gin-scaffold)](https://goreportcard.com/report/dcu/gin-scaffold)
+
 `Gin Scaffold`는 CLI `gin`체제를 위한 스캐포르딘그 생성을 위한 CLI(커멘드 라인 인터페이스)입니다.
 현재 이 프로젝트에서는 그러면 데이타베이스로서 `mongodb` 와 `mgo` 마셔 서포트하고 있습니다.
 
