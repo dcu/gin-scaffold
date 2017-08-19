@@ -38,30 +38,30 @@ func findFieldType(name string) string {
 	switch name {
 	case "text":
 		{
-		name = "string"
+			name = "string"
 		}
 	case "float":
 		{
-		name = "float64"
+			name = "float64"
 		}
 	case "boolean":
 		{
-		name = "bool"
+			name = "bool"
 		}
 	case "integer":
 		{
-		name = "int"
+			name = "int"
 		}
 	case "decimal":
 		{
-		name = "int64"
+			name = "int64"
 		}
 	case
 		"time",
 		"date",
 		"datetime":
 		{
-		name = "int64"
+			name = "int64"
 		}
 	}
 
