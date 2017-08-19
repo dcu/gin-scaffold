@@ -126,11 +126,15 @@ func ({{.InstanceName}} *{{.ModelName}}) SetAttributes(params url.Values) {
 
 {{range $fieldName, $field := .Fields}}\
 	if value, ok := params["{{$fieldName | Underscore}}"]; ok {
-{{if is_cast $field.FieldType }}\
-		tmp, _ := {{ conv "value[0]" $field.FieldType }}
+{{if is_tmp $field.FieldType }}\
+		tmp, _ := {{ conv "value[0]" $field.FieldType $field.Misc }}
+		{{if eq $field.Misc "time" }}\
+		{{$instanceName}}.{{$fieldName}} = tmp.Unix()
+		{{else}}\
 		{{$instanceName}}.{{$fieldName}} = {{ $field.FieldType }}(tmp)
+		{{end}}\
 {{else}}\
-		{{$instanceName}}.{{$fieldName}}{{ ret $field.FieldType }} = {{ conv "value[0]" $field.FieldType }}
+		{{$instanceName}}.{{$fieldName}}{{ ret $field.FieldType }} = {{ conv "value[0]" $field.FieldType $field.Misc }}
 {{end}}\
 	}
 {{end}}\
