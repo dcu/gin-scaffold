@@ -34,11 +34,12 @@ var (
 		"ToLower":    strings.ToLower,
 		"set":        s.Set,
 		"inc":        s.Inc,
-		"is_cast": func(fieldType string) bool {
+		"is_tmp": func(fieldType string) bool {
 			switch fieldType {
 			case
 				"int16",
-				"int32":
+				"int32",
+				"int64":
 				return true
 			}
 			return false
@@ -56,7 +57,7 @@ var (
 			}
 			return ""
 		},
-		"conv": func(origin string, fieldType string) string {
+		"conv": func(origin string, fieldType string, misc string) string {
 			if fieldType == "int" {
 				return "strconv.Atoi(" + origin + ")"
 			} else if fieldType == "int16" {
@@ -64,6 +65,10 @@ var (
 			} else if fieldType == "int32" {
 				return "strconv.ParseInt(" + origin + ", 10, 32)"
 			} else if fieldType == "int64" {
+				// original time is time
+				if misc == "time" {
+					return "time.Parse(\"2006-01-02 15:04:05\", " + origin + ")"
+				}
 				return "strconv.ParseInt(" + origin + ", 10, 64)"
 			} else if fieldType == "float64" {
 				return "strconv.ParseFloat(" + origin + ", 64)"

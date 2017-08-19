@@ -19,8 +19,8 @@ var (
 // {{.ModelName}} is a model
 type {{.ModelName}} struct {
 	ID bson.ObjectId  `bson:"_id,omitempty"`
-{{range $fieldName, $fieldType := .Fields}}\
-	{{$fieldName}} {{$fieldType}} `bson:"{{$fieldName | Underscore}}"`
+{{range $fieldName, $field := .Fields}}\
+	{{$fieldName}} {{$field.FieldType}} `bson:"{{$fieldName | Underscore}}"`
 {{end}}\
 	CreatedAt int64 `bson:"created_at"`
 	UpdatedAt int64 `bson:"updated_at"`
@@ -94,7 +94,7 @@ func ({{.InstanceName}} *{{.ModelName}}) update(dbSession *{{.ModelName}}DBSessi
 func ({{.InstanceName}} *{{.ModelName}}) ToResponseMap() helpers.ResponseMap {
 	return helpers.ResponseMap{
 		"id": {{.InstanceName}}.ID,
-{{range $fieldName, $fieldType := .Fields}}\
+{{range $fieldName, $field := .Fields}}\
 		"{{$fieldName | Underscore}}": {{$instanceName}}.{{$fieldName}},
 {{end}}\
 	}
@@ -124,13 +124,17 @@ func ({{.InstanceName}} *{{.ModelName}}) SetAttributes(params url.Values) {
 	// for avoiding compile unused strconv error.
 	var _ = strconv.FormatBool(true)
 
-{{range $fieldName, $fieldType := .Fields}}\
+{{range $fieldName, $field := .Fields}}\
 	if value, ok := params["{{$fieldName | Underscore}}"]; ok {
-{{if is_cast $fieldType }}\
-		tmp, _ := {{ conv "value[0]" $fieldType }}
-		{{$instanceName}}.{{$fieldName}} = {{ $fieldType }}(tmp)
+{{if is_tmp $field.FieldType }}\
+		tmp, _ := {{ conv "value[0]" $field.FieldType $field.Misc }}
+		{{if eq $field.Misc "time" }}\
+		{{$instanceName}}.{{$fieldName}} = tmp.Unix()
+		{{else}}\
+		{{$instanceName}}.{{$fieldName}} = {{ $field.FieldType }}(tmp)
+		{{end}}\
 {{else}}\
-		{{$instanceName}}.{{$fieldName}}{{ ret $fieldType }} = {{ conv "value[0]" $fieldType }}
+		{{$instanceName}}.{{$fieldName}}{{ ret $field.FieldType }} = {{ conv "value[0]" $field.FieldType $field.Misc }}
 {{end}}\
 	}
 {{end}}\

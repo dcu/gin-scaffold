@@ -10,6 +10,12 @@ import (
 	"github.com/dcu/gin-scaffold/template"
 )
 
+type Field struct {
+	FieldType string
+	// judge for real tyme is time or something
+	Misc string
+}
+
 // ModelCommand generates files related to model.
 type ModelCommand struct {
 	PackageName        string
@@ -18,7 +24,7 @@ type ModelCommand struct {
 	InstanceName       string
 	InstanceNamePlural string
 	TemplateName       string
-	Fields             map[string]string
+	Fields             map[string]Field
 }
 
 // Help prints a help message for this command.
@@ -34,46 +40,51 @@ Example:
 `)
 }
 
-func findFieldType(name string) string {
+func findFieldType(name string) (string, string) {
+	misc := ""
 	switch name {
 	case "text":
 		{
-		name = "string"
+			name = "string"
 		}
 	case "float":
 		{
-		name = "float64"
+			name = "float64"
 		}
 	case "boolean":
 		{
-		name = "bool"
+			name = "bool"
 		}
 	case "integer":
 		{
-		name = "int"
+			name = "int"
 		}
 	case "decimal":
 		{
-		name = "int64"
+			name = "int64"
 		}
 	case
 		"time",
 		"date",
 		"datetime":
 		{
-		name = "int64"
+			name = "int64"
+			misc = "time"
 		}
 	}
 
-	return name
+	return name, misc
 }
 
 // Converts "<fieldname>:<type>" to {"<fieldname>": "<type>"}
-func processFields(args []string) map[string]string {
-	fields := map[string]string{}
+func processFields(args []string) map[string]Field {
+	fields := map[string]Field{}
 	for _, arg := range args {
 		fieldNameAndType := strings.SplitN(arg, ":", 2)
-		fields[inflect.Titleize(fieldNameAndType[0])] = findFieldType(fieldNameAndType[1])
+		key := inflect.Titleize(fieldNameAndType[0])
+		name, misc := findFieldType(fieldNameAndType[1])
+		field:= Field{name, misc}
+		fields[key] = field
 	}
 
 	return fields
