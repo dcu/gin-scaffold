@@ -7,25 +7,25 @@
 `Gin Scaffold` is CLI to generate scaffolds for the `gin` framework.
 For now the project only supports `mongodb` and `mgo` as database.
 
-## Installation
+##安装
 
 	go get github.com/dcu/gin-scaffold
 
-## Initializing a project
+##初始化项目
 
 	gin-scaffold init <project path>
 
-## Creating a model
+##创建一个模型
 
-	gin-scaffold model <model name> <field name>:<field type>
+	gin-scaffold model<model name> <field name>：<field type>
 
-## Creating a controller
+##创建控制器
 
 	gin-scaffold controller <controller name>
 
-## Creating a scaffold
+##创建一个脚手架
 
-	gin-scaffold scaffold <controller name> <field name>:<field type>
+	gin-scaffold scaffold <controller name> <field name>：<field type>
 
 ## Running
 
@@ -33,7 +33,7 @@ For now the project only supports `mongodb` and `mgo` as database.
 
 ## Accessing
 
-	Open browser, and access to http://localhost:4000. (Default port:4000)
+	Open browser, and access to http://localhost:4000. (默认 port:4000)
 
 ## Installation
 
@@ -41,11 +41,11 @@ For now the project only supports `mongodb` and `mgo` as database.
 $ go get github.com/dcu/gin-scaffold
 ```
 
-# License
+# 执照
 
 MIT
 
-# Author
+# 作者
 
 David Cuadrado (dcu)
 
