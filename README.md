@@ -36,12 +36,6 @@ For now the project only supports `mongodb` and `mgo` as database.
 
 	Open browser, and access to http://localhost:4000. (Default port:4000)
 
-## Installation
-
-```
-$ go get github.com/dcu/gin-scaffold
-```
-
 # License
 
 MIT

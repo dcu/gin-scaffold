@@ -4,48 +4,44 @@
 [![Build Status](https://travis-ci.org/dcu/gin-scaffold.svg?branch=master)](https://travis-ci.org/dcu/gin-scaffold)
 [![Coverage Status](https://coveralls.io/repos/github/mattn/go-colorable/badge.svg?branch=master)](https://coveralls.io/github/dcu/gin-scaffold?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/dcu/gin-scaffold)](https://goreportcard.com/report/dcu/gin-scaffold)
-`Gin Scaffold` is CLI to generate scaffolds for the `gin` framework.
-For now the project only supports `mongodb` and `mgo` as database.
 
-## Installation
+For now the project only supports `mongodb` and `mgo` as database.
+`Gin Scaffold` 是用於為 `gin` 框架生成腳手架的CLI。
+現在該項目只支持 `mongodb` 和 `mgo` 作為數據庫。
+
+## 安裝 
 
 	go get github.com/dcu/gin-scaffold
 
-## Initializing a project
+## 創建一個模型
 
 	gin-scaffold init <project path>
 
-## Creating a model
+## 創建控制器
 
 	gin-scaffold model <model name> <field name>:<field type>
 
-## Creating a controller
+## 創建一個腳手架
 
 	gin-scaffold controller <controller name>
 
-## Creating a scaffold
+## 創建一個腳手架
 
 	gin-scaffold scaffold <controller name> <field name>:<field type>
 
-## Running
+## 賽跑
 
 	go run <project name>.go
 
-## Accessing
+## 訪問
 
 	Open browser, and access to http://localhost:4000. (Default port:4000)
 
-## Installation
-
-```
-$ go get github.com/dcu/gin-scaffold
-```
-
-# License
+# 執照
 
 MIT
 
-# Author
+# 作者
 
 David Cuadrado (dcu)
 
