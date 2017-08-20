@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.org/dcu/gin-scaffold.svg?branch=master)](https://travis-ci.org/dcu/gin-scaffold)
 [![Coverage Status](https://coveralls.io/repos/github/mattn/go-colorable/badge.svg?branch=master)](https://coveralls.io/github/dcu/gin-scaffold?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/dcu/gin-scaffold)](https://goreportcard.com/report/dcu/gin-scaffold)
+
 `Gin Scaffold` is CLI to generate scaffolds for the `gin` framework.
 For now the project only supports `mongodb` and `mgo` as database.
 
