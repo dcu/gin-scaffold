@@ -5,14 +5,15 @@ import (
 	"{{.PackageName}}/models"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2/bson"
+	"net/http"
 )
 
 var (
 	// Err{{.ModelName}}NotFound is returned when the {{.InstanceName}} was not found.
-	Err{{.ModelName}}NotFound     = helpers.NewResponseError(404, "{{.InstanceName}} not found")
+	Err{{.ModelName}}NotFound     = helpers.NewResponseError(http.StatusNotFound, "{{.InstanceName}} not found")
 
 	// ErrCannotDelete{{.ModelName}} is returned when the {{.InstanceName}} can't be deleted.
-	ErrCannotDelete{{.ModelName}} = helpers.NewResponseError(404, "cannot delete {{.InstanceName}}")
+	ErrCannotDelete{{.ModelName}} = helpers.NewResponseError(http.StatusNotFound, "cannot delete {{.InstanceName}}")
 )
 
 // {{.ControllerName}}Controller is the {{.ModelName}} controller.
@@ -28,9 +29,9 @@ func (controller *{{.ControllerName}}Controller) create{{.ModelName}}(c *gin.Con
 
 	defer {{.InstanceName}}.Save()
 	if len({{.InstanceName}}.ErrorMessages()) == 0 {
-		helpers.JSONResponseObject(c, 200, {{.InstanceName}})
+		helpers.JSONResponseObject(c, http.StatusOK, {{.InstanceName}})
 	} else {
-		helpers.JSONResponse(c, 400, {{.InstanceName}}.ErrorMessages())
+		helpers.JSONResponse(c, http.StatusBadRequest, {{.InstanceName}}.ErrorMessages())
 	}
 }
 
@@ -47,7 +48,7 @@ func (controller *{{.ControllerName}}Controller) list{{.ModelNamePlural}}(c *gin
 		{{.InstanceNamePlural}}Response[i] = {{.InstanceNamePlural}}.ToResponseMap()
 	}
 
-	helpers.JSONResponseArray(c, 200, {{.InstanceNamePlural}}Response)
+	helpers.JSONResponseArray(c, http.StatusOK, {{.InstanceNamePlural}}Response)
 }
 
 func (controller *{{.ControllerName}}Controller) get{{.ModelName}}(c *gin.Context) {
@@ -58,7 +59,7 @@ func (controller *{{.ControllerName}}Controller) get{{.ModelName}}(c *gin.Contex
 		return
 	}
 
-    helpers.JSONResponseObject(c, 200, {{.InstanceName}})
+    helpers.JSONResponseObject(c, http.StatusOK, {{.InstanceName}})
 }
 
 func (controller *{{.ControllerName}}Controller) update{{.ModelName}}(c *gin.Context) {
@@ -73,9 +74,9 @@ func (controller *{{.ControllerName}}Controller) update{{.ModelName}}(c *gin.Con
 
 	defer {{.InstanceName}}.Save()
 	if len({{.InstanceName}}.ErrorMessages()) == 0 {
-		helpers.JSONResponseObject(c, 200, {{.InstanceName}})
+		helpers.JSONResponseObject(c, http.StatusOK, {{.InstanceName}})
 	} else {
-		helpers.JSONResponse(c, 400, {{.InstanceName}}.ErrorMessages())
+		helpers.JSONResponse(c, http.StatusBadRequest, {{.InstanceName}}.ErrorMessages())
 	}
 }
 
@@ -88,7 +89,7 @@ func (controller *{{.ControllerName}}Controller) delete{{.ModelName}}(c *gin.Con
 	}
 
 	if err := {{.InstanceName}}.Delete(); err == nil {
-		helpers.JSONResponse(c, 200, helpers.ResponseMap{})
+		helpers.JSONResponse(c, http.StatusOK, helpers.ResponseMap{})
 		return
 	}
 
