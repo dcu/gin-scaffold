@@ -98,11 +98,22 @@ func (controller *{{.ControllerName}}Controller) delete{{.ModelName}}(c *gin.Con
 
 // Setup sets up routes for the {{.ModelName}} controller.
 func (controller *{{.ControllerName}}Controller) Setup() {
+	v1 := controller.Router.Group("{{.RoutePath}}")
+	{
+		v1.POST("", controller.create{{.ModelName}})
+		v1.GET("", controller.list{{.ModelNamePlural}})
+		v1.GET("/:{{.InstanceName | Underscore}}_id", controller.get{{.ModelName}})
+		v1.PUT("/:{{.InstanceName | Underscore}}_id", controller.update{{.ModelName}})
+		v1.DELETE("/:{{.InstanceName | Underscore}}_id", controller.delete{{.ModelName}})
+	}
+
+	/*
 	controller.Router.POST("/{{.RoutePath}}", controller.create{{.ModelName}})
 	controller.Router.GET("/{{.RoutePath}}", controller.list{{.ModelNamePlural}})
 	controller.Router.GET("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id", controller.get{{.ModelName}})
 	controller.Router.PUT("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id", controller.update{{.ModelName}})
 	controller.Router.DELETE("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id", controller.delete{{.ModelName}})
+	*/
 }
 
 // vi:syntax=go

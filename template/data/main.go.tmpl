@@ -18,6 +18,7 @@ func getPort() string {
 
 func main() {
 	router := gin.Default()
+	// router.LoadHTMLGlob("templates/**/*.tmpl")
 	controllers.Setup(router)
 
 	router.GET("/", func(c *gin.Context) {
