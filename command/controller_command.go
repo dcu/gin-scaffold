@@ -59,6 +59,27 @@ func (command *ControllerCommand) Execute(args []string) {
 	builder = template.NewBuilder("suite_test.go.tmpl")
 	builder.WriteToPath(outputPath, command)
 
+	// templates folder
+	path := filepath.Join("templates", inflect.Underscore(command.ControllerName))
+	must(os.MkdirAll(path, 00755))
+
+	/*
+	// TODO: index
+	outputPath = filepath.Join(path, "index.tmpl")
+	builder = template.NewBuilder("template_index.tmpl")
+	builder.WriteToPath(outputPath, command)
+
+	// TODO: show
+	outputPath = filepath.Join(path, "show.tmpl")
+	builder = template.NewBuilder("template_show.tmpl")
+	builder.WriteToPath(outputPath, command)
+
+	// TODO: edit
+	outputPath = filepath.Join(path, "edit.tmpl")
+	builder = template.NewBuilder("template_edit.tmpl")
+	builder.WriteToPath(outputPath, command)
+	*/
+
 	command.insertIntoRoutes()
 }
 
