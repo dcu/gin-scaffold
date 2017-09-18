@@ -51,6 +51,13 @@ func (controller *{{.ControllerName}}Controller) list{{.ModelNamePlural}}(c *gin
 	helpers.JSONResponseArray(c, http.StatusOK, {{.InstanceNamePlural}}Response)
 }
 
+// TODO: template for new
+func (controller *{{.ControllerName}}Controller) new{{.ModelName}}(c *gin.Context) {
+        c.HTML(http.StatusOK, "{{.InstanceNamePlural}}/new.tmpl", gin.H{
+                "title": "{{.InstanceName}}",
+        })
+}
+
 func (controller *{{.ControllerName}}Controller) get{{.ModelName}}(c *gin.Context) {
 	{{.InstanceName}}, err := find{{.ModelName}}ByID(c)
 
@@ -117,6 +124,7 @@ func (controller *{{.ControllerName}}Controller) Setup() {
 	{
 		v1.POST("", controller.create{{.ModelName}})
 		v1.GET("", controller.list{{.ModelNamePlural}})
+		// v1.GET("/new", controller.new{{.ModelNamePlural}})
 		v1.GET("/:{{.InstanceName | Underscore}}_id", controller.get{{.ModelName}})
 		v1.GET("/:{{.InstanceName | Underscore}}_id/edit", controller.edit{{.ModelName}})
 		v1.PUT("/:{{.InstanceName | Underscore}}_id", controller.update{{.ModelName}})
@@ -126,6 +134,7 @@ func (controller *{{.ControllerName}}Controller) Setup() {
 	/*
 	controller.Router.POST("/{{.RoutePath}}", controller.create{{.ModelName}})
 	controller.Router.GET("/{{.RoutePath}}", controller.list{{.ModelNamePlural}})
+	// controller.Router.GET("/shops/new", controller.newShop)
 	controller.Router.GET("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id", controller.get{{.ModelName}})
 	controller.Router.GET("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id/edit", controller.edit{{.ModelName}})
 	controller.Router.PUT("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id", controller.update{{.ModelName}})
