@@ -80,6 +80,21 @@ func (controller *{{.ControllerName}}Controller) update{{.ModelName}}(c *gin.Con
 	}
 }
 
+// TODO: template for edit
+func (controller *{{.ControllerName}}Controller) edit{{.ModelName}}(c *gin.Context) {
+	{{.InstanceName}}, err := find{{.ModelName}}ByID(c)
+
+        if err != nil {
+                helpers.JSONResponseError(c, err)
+                return
+        }
+
+        c.HTML(http.StatusOK, "{{.InstanceNamePlural}}/edit.tmpl", gin.H{
+                "title": "{{.InstanceName}}",
+                "body": {{.InstanceName}},
+        })
+}
+
 func (controller *{{.ControllerName}}Controller) delete{{.ModelName}}(c *gin.Context) {
 	{{.InstanceName}}, err := find{{.ModelName}}ByID(c)
 
@@ -103,6 +118,7 @@ func (controller *{{.ControllerName}}Controller) Setup() {
 		v1.POST("", controller.create{{.ModelName}})
 		v1.GET("", controller.list{{.ModelNamePlural}})
 		v1.GET("/:{{.InstanceName | Underscore}}_id", controller.get{{.ModelName}})
+		v1.GET("/:{{.InstanceName | Underscore}}_id/edit", controller.edit{{.ModelName}})
 		v1.PUT("/:{{.InstanceName | Underscore}}_id", controller.update{{.ModelName}})
 		v1.DELETE("/:{{.InstanceName | Underscore}}_id", controller.delete{{.ModelName}})
 	}
@@ -111,6 +127,7 @@ func (controller *{{.ControllerName}}Controller) Setup() {
 	controller.Router.POST("/{{.RoutePath}}", controller.create{{.ModelName}})
 	controller.Router.GET("/{{.RoutePath}}", controller.list{{.ModelNamePlural}})
 	controller.Router.GET("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id", controller.get{{.ModelName}})
+	controller.Router.GET("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id/edit", controller.edit{{.ModelName}})
 	controller.Router.PUT("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id", controller.update{{.ModelName}})
 	controller.Router.DELETE("/{{.RoutePath}}/:{{.InstanceName | Underscore}}_id", controller.delete{{.ModelName}})
 	*/
