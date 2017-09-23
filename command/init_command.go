@@ -16,6 +16,7 @@ var (
 		"controllers",
 		"helpers",
 		"config",
+		"templates",
 	}
 )
 

@@ -106,6 +106,12 @@ func (command *ModelCommand) Execute(args []string) {
 
 	outputPath := filepath.Join("models", inflect.Underscore(command.ModelName)+".go")
 
+	// check models folder
+	if _, err := os.Stat("models"); os.IsNotExist(err) {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+
 	builder := template.NewBuilder("model.go.tmpl")
 	builder.WriteToPath(outputPath, command)
 

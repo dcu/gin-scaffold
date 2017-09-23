@@ -3,6 +3,7 @@ package helpers
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type ResponseError struct {
@@ -31,7 +32,7 @@ func JSONResponseObject(c *gin.Context, statusCode int, object Responsible) {
 }
 
 func JSONResponse(c *gin.Context, statusCode int, body ResponseMap) {
-	if statusCode != 200 {
+	if statusCode != http.StatusOK {
 		body["success"] = false
 	} else {
 		body["success"] = true

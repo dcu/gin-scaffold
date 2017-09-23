@@ -36,6 +36,30 @@ For now the project only supports `mongodb` and `mgo` as database.
 
 	Open browser, and access to http://localhost:4000. (Default port:4000)
 
+## RESTful
+
+* GET
+
+## List
+
+	curl 'http://localhost:4000/<controller name>
+
+## detail 1 by id
+
+	curl 'http://localhost:4000/<controller name>/<id>'
+
+* POST
+
+	curl -w '\n' 'http://localhost:4000/<controller name>' --data '<field name>=<value>' -XPOST
+
+* PUT
+
+	curl -XPUT 'http://localhost:4000/<controller name>/<id>' -d '<field name>=<value>'
+
+* DELETE
+
+	curl -XDELETE 'http://localhost:4000/<controller name>/<id>'
+
 # License
 
 MIT

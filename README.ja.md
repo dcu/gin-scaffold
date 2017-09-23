@@ -36,3 +36,31 @@
 
 	ブラウザを起動して、http://localhost:4000へアクセス。（デフォルトポート:4000）
 
+## RESTful
+
+* GET
+
+## 全件
+
+	curl 'http://localhost:4000/<コントローラ名>
+
+## id指定で1件
+
+	curl 'http://localhost:4000/<コントローラ名>/<id>'
+
+* PUT
+
+	curl -XPUT 'http://localhost:4000/<コントローラ名>/<id>' -d '<フィールド名>=<値>'
+
+* DELETE
+
+	curl -XDELETE 'http://localhost:4000/<コントローラ名>/<id>'
+
+# License
+
+MIT
+
+# Author
+
+David Cuadrado (dcu)
+
