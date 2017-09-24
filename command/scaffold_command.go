@@ -22,11 +22,11 @@ Example:
 `)
 }
 
-func remove(numbers []string, search string) []string {
+func remove(strings []string, search string) []string {
 	result := []string{}
-	for _, num := range numbers {
-		if num != search {
-			result = append(result, num)
+	for _, str := range strings {
+		if str != search {
+			result = append(result, str)
 		}
 	}
 	return result
@@ -42,7 +42,7 @@ func (command *ScaffoldCommand) Execute(args []string) {
 		os.Exit(2)
 	} else if len(args) > 2 {
 		// check args
-		for index, value := range args {
+		for _, value := range args {
 			res := strings.HasPrefix(value, "--")
 
 			if res {
@@ -62,5 +62,6 @@ func (command *ScaffoldCommand) Execute(args []string) {
 	modelCommand.Execute(args)
 
 	controllerCommand := &ControllerCommand{}
-	controllerCommand.Execute([]string{modelCommand.ModelNamePlural})
+	// controllerCommand.Execute([]string{modelCommand.ModelNamePlural})
+	controllerCommand.ExecuteWithOption([]string{modelCommand.ModelNamePlural}, optionStrings)
 }

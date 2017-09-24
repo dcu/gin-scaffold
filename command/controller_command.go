@@ -2,6 +2,7 @@ package command
 
 import (
 	"fmt"
+	"reflect"
 	"os"
 	"path/filepath"
 
@@ -42,7 +43,6 @@ func (command *ControllerCommand) Execute(args []string) {
 	command.RoutePath = inflect.Underscore(command.ControllerName)
 	command.ModelName = inflect.Singularize(command.ControllerName)
 	command.ModelNamePlural = inflect.Pluralize(command.ModelName)
-
 	command.InstanceName = inflect.CamelizeDownFirst(command.ModelName)
 	command.InstanceNamePlural = inflect.Pluralize(command.InstanceName)
 	command.PackageName = template.PackageName()
@@ -63,27 +63,48 @@ func (command *ControllerCommand) Execute(args []string) {
 	path := filepath.Join("templates", inflect.Underscore(command.ControllerName))
 	must(os.MkdirAll(path, 00755))
 
-	/*
-	// TODO: index
-	outputPath = filepath.Join(path, "index.tmpl")
-	builder = template.NewBuilder("template_index.tmpl")
-	builder.WriteToPath(outputPath, command)
-
-	// TODO: show
-	outputPath = filepath.Join(path, "show.tmpl")
-	builder = template.NewBuilder("template_show.tmpl")
-	builder.WriteToPath(outputPath, command)
-
-	// TODO: edit
-	outputPath = filepath.Join(path, "edit.tmpl")
-	builder = template.NewBuilder("template_edit.tmpl")
-	builder.WriteToPath(outputPath, command)
-	*/
-
 	command.insertIntoRoutes()
+}
+
+func (command *ControllerCommand) ExecuteWithOption(args []string, optionStrings []string) {
+	command.Execute(args)
+
+	// template option
+	if HasElem(optionStrings, "--with-template"){
+		/*
+		// TODO: index
+		outputPath = filepath.Join(path, "index.tmpl")
+		builder = template.NewBuilder("template_index.tmpl")
+		builder.WriteToPath(outputPath, command)
+
+		// TODO: show
+		outputPath = filepath.Join(path, "show.tmpl")
+		builder = template.NewBuilder("template_show.tmpl")
+		builder.WriteToPath(outputPath, command)
+
+		// TODO: edit
+		outputPath = filepath.Join(path, "edit.tmpl")
+		builder = template.NewBuilder("template_edit.tmpl")
+		builder.WriteToPath(outputPath, command)
+		*/
+	}
 }
 
 func (command *ControllerCommand) insertIntoRoutes() {
 	builder := template.NewBuilder("controller_router.go.tmpl")
 	builder.InsertAfterToPath("controllers/router.go", "func Setup(", command)
+}
+
+func HasElem(s interface{}, elem interface{}) bool {
+	arrV := reflect.ValueOf(s)
+
+	if arrV.Kind() == reflect.Slice {
+		for i := 0; i < arrV.Len(); i++ {
+			if arrV.Index(i).Interface() == elem {
+				return true
+			}
+		}
+	}
+
+	return false
 }
