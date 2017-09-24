@@ -3,7 +3,7 @@ package command
 import (
 	"fmt"
 	"os"
-
+	"strings"
 	"bitbucket.org/pkg/inflect"
 )
 
@@ -22,11 +22,41 @@ Example:
 `)
 }
 
+func remove(numbers []string, search string) []string {
+	result := []string{}
+	for _, num := range numbers {
+		if num != search {
+			result = append(result, num)
+		}
+	}
+	return result
+}
+
 func (command *ScaffoldCommand) Execute(args []string) {
+	// --option
+	optionStrings := []string{}
+	removeStrings := []string{}
+
 	if len(args) == 0 {
 		command.Help()
 		os.Exit(2)
+	} else if len(args) > 2 {
+		// check args
+		for index, value := range args {
+			res := strings.HasPrefix(value, "--")
+
+			if res {
+				optionStrings = append(optionStrings, value)
+				removeStrings = append(removeStrings, value)
+			}
+		}
 	}
+
+	// remove from argument
+	for _, value := range removeStrings {
+		args = remove(args, value)
+	}
+
 	args[0] = inflect.Singularize(args[0])
 	modelCommand := &ModelCommand{}
 	modelCommand.Execute(args)
